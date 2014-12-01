@@ -11,17 +11,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class Gui extends JFrame implements ActionListener
+public class MainWindow extends JFrame implements ActionListener
 {
 	public PlayingField pf;
 	
-	public Gui()
+	public MainWindow()
 	{
 		Dimension prefSize = new Dimension();
-		pf = new PlayingField(20,20);
+		pf = new PlayingField(30, 15, 40, 20);
 		this.setResizable(false);
 		this.setContentPane(pf);
-		prefSize.setSize(pf.getPreferredSize().getWidth(), pf.getPreferredSize().getHeight() +46);
+		prefSize.setSize(pf.getPreferredSize().getWidth()+7, pf.getPreferredSize().getHeight() +53);
 		this.setPreferredSize(prefSize);
 		this.setTitle("Minesweeper");
 		this.setLocation(new Point(200,200));
@@ -49,6 +49,6 @@ public class Gui extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getActionCommand() == "Einstellungen")
-			System.out.println("Einstellungen wurde gedrückt!!");
+		System.out.println("Einstellungen wurde gedrückt!!");
 	}
 }
