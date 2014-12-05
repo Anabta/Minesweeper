@@ -13,18 +13,21 @@ import javax.swing.JMenuItem;
 
 public class MainWindow extends JFrame implements ActionListener
 {
-	public PlayingField pf;
+	private PlayingField pf;
+	private SettingsWindow settings;
 	
 	public MainWindow()
 	{
+		settings = new SettingsWindow(3);
+		//settings = new Settings(30,15,40,20,200,200);
 		Dimension prefSize = new Dimension();
-		pf = new PlayingField(30, 15, 40, 20);
+		pf = new PlayingField(settings);
 		this.setResizable(false);
 		this.setContentPane(pf);
 		prefSize.setSize(pf.getPreferredSize().getWidth()+7, pf.getPreferredSize().getHeight() +53);
 		this.setPreferredSize(prefSize);
 		this.setTitle("Minesweeper");
-		this.setLocation(new Point(200,200));
+		this.setLocation(new Point(settings.getPxLeft(),settings.getPxTop()));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.setJMenuBar(createMenuBar());
@@ -49,6 +52,6 @@ public class MainWindow extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getActionCommand() == "Einstellungen")
-		System.out.println("Einstellungen wurde gedrückt!!");
+			settings.setVisible(true);
 	}
 }

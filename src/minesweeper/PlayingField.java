@@ -13,12 +13,12 @@ public class PlayingField extends JPanel
 	private int bombCount;
 	private int[][] bombs;
 	
-	public PlayingField(int width, int height, int scaling, int bombCount)
+	public PlayingField(SettingsWindow settings)
 	{
-		this.width = width;
-		this.height = height;
-		this.scaling = scaling; 
-		this.bombCount = bombCount;
+		this.width = settings.getWidth();
+		this.height = settings.getHeight();
+		this.scaling = settings.getScaling(); 
+		this.bombCount = settings.getBombCount();
 		this.bombs = new int[width][height];
 		
 //		for(int i = 0; i < height; i++)
