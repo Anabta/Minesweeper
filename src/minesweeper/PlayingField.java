@@ -22,14 +22,6 @@ public class PlayingField extends JPanel
 		
 		this.bombs = new int[width][height];
 		
-//		for(int i = 0; i < height; i++)
-//			for(int j = 0; j < width; j++)
-//				bombs[j][i] = 0;
-//		
-//		bombs[0][0] = 9;
-//		bombs[14][0] = 9;
-//		bombs[14][14] = 9;
-		
 		this.placeBombs();
 		this.setPreferredSize(new Dimension(width*scaling,height*scaling));
 		

@@ -11,15 +11,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class MainWindow extends JFrame implements ActionListener
+public class MainWindow extends JFrame
 {
 	private PlayingField pf;
 	private SettingsWindow settings;
 	
 	public MainWindow()
 	{
-		settings = new SettingsWindow(3);
-		//settings = new Settings(30,15,40,20,200,200);
+		//settings = new SettingsWindow(3);
+		settings = new SettingsWindow(30,15,40,50,200,200);
 		Dimension prefSize = new Dimension();
 		pf = new PlayingField(settings);
 		this.setResizable(false);
@@ -41,17 +41,14 @@ public class MainWindow extends JFrame implements ActionListener
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu();
 		menu.setText("Menü");
-		JMenuItem settings = new JMenuItem();
-		settings.setText("Einstellungen");
-		settings.addActionListener(this);
-		menu.add(settings);
+		JMenuItem menuSettings = new JMenuItem();
+		menuSettings.setText("Einstellungen");
+		menuSettings.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
+		{
+			settings.setVisible(true);
+		}});
+		menu.add(menuSettings);
 		menuBar.add(menu);
 		return menuBar;
-	}
-	
-	public void actionPerformed(ActionEvent e)
-	{
-		if(e.getActionCommand() == "Einstellungen")
-			settings.setVisible(true);
 	}
 }
