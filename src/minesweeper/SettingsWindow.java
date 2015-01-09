@@ -1,5 +1,6 @@
 package minesweeper;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
@@ -7,149 +8,153 @@ import javax.swing.JFrame;
 
 public class SettingsWindow extends JFrame
 {
-	private int width;
-	private int height;
-	private int scaling;
-	private int bombCount;
-	private int difficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
-	private int pxLeft;
-	private int pxTop;
+	private int sWidth;
+	private int sHeight;
+	private int sScaling;
+	private int sBombCount;
+	private int sDifficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
+	private int sPxLeft;
+	private int sPxTop;
 	private boolean isVisible;
 	
 	private SettingsPanel sp;
 	
+	public static void main(String[] args)
+	{
+		SettingsWindow w = new SettingsWindow(16,100,30,99,200,200);
+	}
+	
 	public SettingsWindow(int width, int height, int scaling, int bombCount, int left, int top)
 	{
-		this.width = width;
-		this.height = height;
-		this.scaling = scaling;
-		this.bombCount = bombCount;
-		this.pxLeft = left;
-		this.pxTop = top;
-		this.difficulty = 0;
+		this.sWidth = width;
+		this.sHeight = height;
+		this.sScaling = scaling;
+		this.sBombCount = bombCount;
+		this.sPxLeft = left;
+		this.sPxTop = top;
+		this.sDifficulty = 0;
 		this.isVisible = false;
 		this.initWindow();
 	}
 	
 	public SettingsWindow(int difficulty)
 	{
-		this.setDifficulty(difficulty);
+		this.setSDifficulty(difficulty);
 		this.isVisible = false;
 		this.initWindow();
 	}
 	
 	private void initWindow()
 	{
-		sp = new SettingsPanel();
-		sp.setPreferredSize(new Dimension(200,200));
-		this.setContentPane(sp);
-		this.setPreferredSize(sp.getPreferredSize());
 		this.setTitle("Settings");
 		this.setLocation(new Point(100,100));
 		this.setResizable(false);
+		sp = new SettingsPanel();
+		sp.setPreferredSize(new Dimension(200,200));
+		this.setPreferredSize(sp.getPreferredSize());
+		this.setContentPane(sp);
 		this.pack();
 		this.setVisible(false);
 	}
 
-	public int getWidth()
+	public int getSWidth()
 	{
-		return width;
+		return sWidth;
 	}
 
-	public void setSize(int width, int height)
+	public void setSSize(int width, int height)
 	{
-		this.width = width;
-		this.height = height;
+		this.sWidth = width;
+		this.sHeight = height;
 	}
 
-	public int getHeight()
+	public int getSHeight()
 	{
-		return height;
+		return sHeight;
 	}
 
-	public int getScaling()
+	public int getSScaling()
 	{
-		return scaling;
+		return sScaling;
 	}
 
-	public void setScaling(int scaling)
+	public void setSScaling(int scaling)
 	{
-		this.scaling = scaling;
+		this.sScaling = scaling;
 	}
 
-	public int getBombCount()
+	public int getSBombCount()
 	{
-		return bombCount;
+		return sBombCount;
 	}
 
-	public void setBombCount(int bombCount)
+	public void setSBombCount(int bombCount)
 	{
-		this.bombCount = bombCount;
+		this.sBombCount = bombCount;
 	}
 
-	public int getDifficulty()
+	public int getSDifficulty()
 	{
-		return difficulty;
+		return sDifficulty;
 	}
 
-	public void setDifficulty(int difficulty)
+	public void setSDifficulty(int difficulty)
 	{
-		if(difficulty > 3 || difficulty < 0)
-		{
-			System.out.println("Invalid difficulty was entered!");
-			return;
-		}
-		else if(difficulty == 0)
+		if(difficulty == 0)
 		{
 			System.out.println("Simply change one value, the difficulty will automatically change");
 			return;
 		}
 		else if(difficulty == 1)		//easy
 		{
-			this.width = 9;
-			this.height = 9;
-			this.scaling = 50;
-			this.bombCount = 10;
-			this.pxLeft = 200;
-			this.pxTop = 200;
+			this.sWidth = 9;
+			this.sHeight = 9;
+			this.sScaling = 50;
+			this.sBombCount = 10;
+			this.sPxLeft = 200;
+			this.sPxTop = 200;
 		}
 		else if(difficulty == 2)		//medium
 		{
-			this.width = 16;
-			this.height = 16;
-			this.scaling = 40;
-			this.bombCount = 40;
-			this.pxLeft = 200;
-			this.pxTop = 200;
+			this.sWidth = 16;
+			this.sHeight = 16;
+			this.sScaling = 40;
+			this.sBombCount = 40;
+			this.sPxLeft = 200;
+			this.sPxTop = 200;
 		}
-		else							//hard
+		else if(difficulty == 3)		//hard
 		{
-			this.width = 30;
-			this.height = 16;
-			this.scaling = 30;
-			this.bombCount = 99;
-			this.pxLeft = 200;
-			this.pxTop = 200;
+			this.sWidth = 30;
+			this.sHeight = 16;
+			this.sScaling = 30;
+			this.sBombCount = 99;
+			this.sPxLeft = 200;
+			this.sPxTop = 200;
+		}
+		else
+		{
+			System.out.println("Invalid difficulty was entered!");
+			return;
 		}
 		
-		this.difficulty = difficulty;
-		//reload the game... 
+		this.sDifficulty = difficulty;
 	}
 
-	public int getPxLeft()
+	public int getSPxLeft()
 	{
-		return pxLeft;
+		return sPxLeft;
 	}
 
-	public int getPxTop()
+	public int getSPxTop()
 	{
-		return pxTop;
+		return sPxTop;
 	}
 	
-	public void setPxPos(int pxLeft, int pxTop)
+	public void setSPxPos(int pxLeft, int pxTop)
 	{
-		this.pxLeft = pxLeft;
-		this.pxTop = pxTop;
+		this.sPxLeft = pxLeft;
+		this.sPxTop = pxTop;
 	}
 	
 	public void setVisible(boolean isVisible)

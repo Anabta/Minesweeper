@@ -15,10 +15,11 @@ public class PlayingField extends JPanel
 	
 	public PlayingField(SettingsWindow settings)
 	{
-		this.width = settings.getWidth();
-		this.height = settings.getHeight();
-		this.scaling = settings.getScaling(); 
-		this.bombCount = settings.getBombCount();
+		this.width = settings.getSWidth();
+		this.height = settings.getSHeight();
+		this.scaling = settings.getSScaling(); 
+		this.bombCount = settings.getSBombCount();
+		
 		this.bombs = new int[width][height];
 		
 //		for(int i = 0; i < height; i++)
@@ -39,6 +40,7 @@ public class PlayingField extends JPanel
 			System.out.print("\n");
 		}
 	}
+	
 	
 	@Override
 	public void paintComponent(Graphics g)
@@ -65,7 +67,7 @@ public class PlayingField extends JPanel
 		}
 	}
 	
-	public void placeBombs()
+	private void placeBombs()
 	{
 		int left, top;
 		for(int i = 0; i < bombCount; )

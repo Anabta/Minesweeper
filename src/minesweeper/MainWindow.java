@@ -27,7 +27,7 @@ public class MainWindow extends JFrame implements ActionListener
 		prefSize.setSize(pf.getPreferredSize().getWidth()+7, pf.getPreferredSize().getHeight() +53);
 		this.setPreferredSize(prefSize);
 		this.setTitle("Minesweeper");
-		this.setLocation(new Point(settings.getPxLeft(),settings.getPxTop()));
+		this.setLocation(new Point(settings.getSPxLeft(),settings.getSPxTop()));
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.setJMenuBar(createMenuBar());
