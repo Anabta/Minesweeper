@@ -15,6 +15,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -23,9 +24,9 @@ public class SettingsPanel extends JPanel
 {	
 	private SettingsWindow parent;
 	
-	public SettingsPanel(SettingsWindow parent)
+	public SettingsPanel(SettingsWindow par)
 	{
-		this.parent = parent;
+		this.parent = par;
 		this.setLayout(new BorderLayout());
 		
 		JPanel submitGrid = new JPanel(new GridLayout(1,2));
@@ -38,10 +39,10 @@ public class SettingsPanel extends JPanel
 		overallGrid.add(rightGrid);
 		JPanel customGrid = new JPanel(new GridLayout(3,2));
 		
-		JRadioButton radBeginner = new JRadioButton("Anfänger");
-		JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
-		JRadioButton radExpert = new JRadioButton("Experte");
-		JRadioButton radCustom = new JRadioButton("Benutzerdefiniert");
+		final JRadioButton radBeginner = new JRadioButton("Anfänger");
+		final JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
+		final JRadioButton radExpert = new JRadioButton("Experte");
+		final JRadioButton radCustom = new JRadioButton("Benutzerdefiniert");
 		
 		ButtonGroup radGrp = new ButtonGroup();
 		radGrp.add(radBeginner);
@@ -61,9 +62,9 @@ public class SettingsPanel extends JPanel
 		JLabel labHeight = new JLabel("Höhe:");
 		JLabel labBombCount = new JLabel("Bombenzahl:");
 		
-		JTextField tfWidth = new JTextField();
-		JTextField tfHeight = new JTextField();
-		JTextField tfBombCount = new JTextField();
+		final JTextField tfWidth = new JTextField();
+		final JTextField tfHeight = new JTextField();
+		final JTextField tfBombCount = new JTextField();
 		
 		customGrid.add(labWidth);
 		customGrid.add(tfWidth);
@@ -73,8 +74,41 @@ public class SettingsPanel extends JPanel
 		customGrid.add(tfBombCount);
 		
 		JButton butOk = new JButton("OK");
+		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
+		{
+			if(radBeginner.isSelected())
+			{
+				parent.setSDifficulty(SettingsWindow.DIF_EASY);
+			}
+			else if(radIntermediate.isSelected())
+			{
+				parent.setSDifficulty(SettingsWindow.DIF_MEDIUM);
+			}
+			else if(radExpert.isSelected())
+			{
+				parent.setSDifficulty(SettingsWindow.DIF_HARD);
+			}
+			else if(radCustom.isSelected())
+			{
+				int enteredWidth = Integer.parseInt(tfWidth.getText());
+				int enteredHeight = Integer.parseInt(tfHeight.getText());
+				int enteredBombCount = Integer.parseInt(tfBombCount.getText());
+				if(enteredWidth < 1 || enteredWidth > 100 || 
+						enteredHeight < 1 || enteredHeight > 100 ||
+						enteredBombCount < 1 || enteredBombCount > (enteredWidth * enteredHeight))
+				{
+					JOptionPane.showMessageDialog(null,"Die eingegebenen Werte sind nicht gültig!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
+					return;
+				}
+				parent.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
+			}
+			parent.setVisible(false);
+		}});
 		JButton butCancel = new JButton("Abbrechen");
-		
+		butCancel.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
+		{
+			parent.setVisible(false);	
+		}});		
 		submitGrid.add(butCancel);
 		submitGrid.add(butOk);
 	}	

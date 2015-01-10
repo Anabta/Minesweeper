@@ -3,6 +3,7 @@ package minesweeper;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.security.InvalidParameterException;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -10,6 +11,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class SettingsWindow extends JFrame
 {
+	public static int DIF_EASY = 1;
+	public static int DIF_MEDIUM = 2;
+	public static int DIF_HARD = 3;
+	public static int DIF_CUSTOM = 4;
+	
+	
 	private int sWidth;
 	private int sHeight;
 	private int sScaling;
@@ -34,11 +41,18 @@ public class SettingsWindow extends JFrame
 		this.initWindow();
 	}
 	
-	public SettingsWindow(int difficulty)
+	public SettingsWindow(int diff)
 	{
-		this.setSDifficulty(difficulty);
-		this.isVisible = false;
-		this.initWindow();
+		if(diff > 0 && diff < 4)
+		{
+			this.setSDifficulty(diff);
+			this.isVisible = false;
+			this.initWindow();
+		}
+		else
+		{
+			throw new InvalidParameterException();
+		}
 	}
 	
 	private void initWindow()
@@ -51,7 +65,7 @@ public class SettingsWindow extends JFrame
 		this.setPreferredSize(sp.getPreferredSize());
 		this.setContentPane(sp);
 		this.pack();
-		this.setVisible(true);
+		this.setVisible(false);
 	}
 
 	public int getSWidth()
@@ -102,7 +116,7 @@ public class SettingsWindow extends JFrame
 			System.out.println("Simply change one value, the difficulty will automatically change");
 			return;
 		}
-		else if(difficulty == 1)		//easy
+		else if(difficulty == DIF_EASY)		//easy
 		{
 			this.sWidth = 9;
 			this.sHeight = 9;
@@ -111,7 +125,7 @@ public class SettingsWindow extends JFrame
 			this.sPxLeft = 200;
 			this.sPxTop = 200;
 		}
-		else if(difficulty == 2)		//medium
+		else if(difficulty == DIF_MEDIUM)		//medium
 		{
 			this.sWidth = 16;
 			this.sHeight = 16;
@@ -120,7 +134,7 @@ public class SettingsWindow extends JFrame
 			this.sPxLeft = 200;
 			this.sPxTop = 200;
 		}
-		else if(difficulty == 3)		//hard
+		else if(difficulty == DIF_HARD)		//hard
 		{
 			this.sWidth = 30;
 			this.sHeight = 16;
@@ -129,6 +143,10 @@ public class SettingsWindow extends JFrame
 			this.sPxLeft = 200;
 			this.sPxTop = 200;
 		}
+		else if(difficulty == DIF_CUSTOM)
+		{
+			//parameters have to be changed elsewhere
+		}
 		else
 		{
 			System.out.println("Invalid difficulty was entered!");
@@ -136,6 +154,13 @@ public class SettingsWindow extends JFrame
 		}
 		
 		this.sDifficulty = difficulty;
+	}
+	
+	public void setCustomParameters(int width, int height, int bombCount)
+	{
+		this.sWidth = width;
+		this.sHeight = height;
+		this.sBombCount = bombCount;
 	}
 
 	public int getSPxLeft()
