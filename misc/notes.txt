@@ -1,0 +1,8 @@
+Bugs:
+In the settings window: when you select custom but don't fill width/height/bombcount
+In the settings window: when not selecting anything but pressing ok nothing happens
+Small border at the bottom of the playing field throws exceptions when clicked
+
+ToDos:
+Refresh the playing field after applying settings
+Unclicked fields -> darker gray

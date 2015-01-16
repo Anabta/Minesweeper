@@ -6,8 +6,6 @@ import java.awt.Point;
 import java.security.InvalidParameterException;
 
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class SettingsWindow extends JFrame
 {

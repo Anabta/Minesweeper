@@ -29,15 +29,15 @@ public class SettingsPanel extends JPanel
 		this.parent = par;
 		this.setLayout(new BorderLayout());
 		
-		JPanel submitGrid = new JPanel(new GridLayout(1,2));
-		this.add(submitGrid, BorderLayout.PAGE_END);
-		JPanel overallGrid = new JPanel(new GridLayout(1,2));
-		this.add(overallGrid, BorderLayout.CENTER);
-		JPanel leftGrid = new JPanel(new GridLayout(3,1));
-		overallGrid.add(leftGrid);
-		JPanel rightGrid = new JPanel(new GridLayout(2,1));
-		overallGrid.add(rightGrid);
-		JPanel customGrid = new JPanel(new GridLayout(3,2));
+		JPanel panSubmit = new JPanel(new GridLayout(1,2));
+		this.add(panSubmit, BorderLayout.PAGE_END);
+		JPanel panOverall = new JPanel(new GridLayout(1,2));
+		this.add(panOverall, BorderLayout.CENTER);
+		JPanel panLeft = new JPanel(new GridLayout(3,1));
+		panOverall.add(panLeft);
+		JPanel panRight = new JPanel(new GridLayout(2,1));
+		panOverall.add(panRight);
+		JPanel panCustom = new JPanel(new GridLayout(3,2));
 		
 		final JRadioButton radBeginner = new JRadioButton("Anfänger");
 		final JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
@@ -50,28 +50,28 @@ public class SettingsPanel extends JPanel
 		radGrp.add(radExpert);
 		radGrp.add(radCustom);
 		
-		leftGrid.add(radBeginner);
-		leftGrid.add(radIntermediate);
-		leftGrid.add(radExpert);
+		panLeft.add(radBeginner);
+		panLeft.add(radIntermediate);
+		panLeft.add(radExpert);
 		
-		rightGrid.add(radCustom);
+		panRight.add(radCustom);
 		
-		rightGrid.add(customGrid);
+		panRight.add(panCustom);
 		
 		JLabel labWidth = new JLabel("Breite:");
 		JLabel labHeight = new JLabel("Höhe:");
 		JLabel labBombCount = new JLabel("Bombenzahl:");
 		
-		final JTextField tfWidth = new JTextField();
-		final JTextField tfHeight = new JTextField();
-		final JTextField tfBombCount = new JTextField();
+		final JTextField txfWidth = new JTextField();
+		final JTextField txfHeight = new JTextField();
+		final JTextField txfBombCount = new JTextField();
 		
-		customGrid.add(labWidth);
-		customGrid.add(tfWidth);
-		customGrid.add(labHeight);
-		customGrid.add(tfHeight);
-		customGrid.add(labBombCount);
-		customGrid.add(tfBombCount);
+		panCustom.add(labWidth);
+		panCustom.add(txfWidth);
+		panCustom.add(labHeight);
+		panCustom.add(txfHeight);
+		panCustom.add(labBombCount);
+		panCustom.add(txfBombCount);
 		
 		JButton butOk = new JButton("OK");
 		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
@@ -90,9 +90,9 @@ public class SettingsPanel extends JPanel
 			}
 			else if(radCustom.isSelected())
 			{
-				int enteredWidth = Integer.parseInt(tfWidth.getText());
-				int enteredHeight = Integer.parseInt(tfHeight.getText());
-				int enteredBombCount = Integer.parseInt(tfBombCount.getText());
+				int enteredWidth = Integer.parseInt(txfWidth.getText());
+				int enteredHeight = Integer.parseInt(txfHeight.getText());
+				int enteredBombCount = Integer.parseInt(txfBombCount.getText());
 				if(enteredWidth < 1 || enteredWidth > 100 || 
 						enteredHeight < 1 || enteredHeight > 100 ||
 						enteredBombCount < 1 || enteredBombCount > (enteredWidth * enteredHeight))
@@ -109,7 +109,7 @@ public class SettingsPanel extends JPanel
 		{
 			parent.setVisible(false);	
 		}});		
-		submitGrid.add(butCancel);
-		submitGrid.add(butOk);
+		panSubmit.add(butCancel);
+		panSubmit.add(butOk);
 	}	
 }
