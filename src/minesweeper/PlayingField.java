@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
@@ -14,6 +15,7 @@ public class PlayingField extends JPanel implements MouseListener
 	private int[][] bombs;			//1-8=nearby bombs ; 9=bomb
 	private int[][] fields;			//0=not opened ; 1=opened
 	private SettingsWindow settings;
+	private int fieldsToOpen;
 	
 	public PlayingField(SettingsWindow set)
 	{
@@ -28,6 +30,8 @@ public class PlayingField extends JPanel implements MouseListener
 		this.placeBombs();
 		this.initFields();
 		this.setPreferredSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
+		
+		this.fieldsToOpen = (settings.getSWidth()*settings.getSHeight())-settings.getSBombCount();
 		
 		addMouseListener(this);
 	}
@@ -132,8 +136,8 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+		if(e.getClickCount() == 2)
+			System.out.println("Doppelklick!!");
 	}
 
 
@@ -170,13 +174,19 @@ public class PlayingField extends JPanel implements MouseListener
 			int my = e.getY()/settings.getSScaling();
 			if(bombs[mx][my] == 9)
 			{
-				System.out.println("Sie haben verkackt!");
-				//new game
+				JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
+				System.exit(0);
 			}
 			if(fields[mx][my] != 1)
 			{
 				fields[mx][my] = 1;
+				fieldsToOpen--;
 				paintComponent(this.getGraphics());
+				if(fieldsToOpen < 1)
+				{
+					JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
+					System.exit(0);
+				}
 			}
 		}
 	}

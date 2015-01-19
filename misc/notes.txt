@@ -5,4 +5,3 @@ Small border at the bottom of the playing field throws exceptions when clicked
 
 ToDos:
 Refresh the playing field after applying settings
-Unclicked fields -> darker gray
