@@ -4,4 +4,5 @@ In the settings window: when not selecting anything but pressing ok nothing happ
 Small border at the bottom of the playing field throws exceptions when clicked
 
 ToDos:
-Refresh the playing field after applying settings
+Refactor the programm and create an own class for one field
+think about how to make testing neighbours more elegant

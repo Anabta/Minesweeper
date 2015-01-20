@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public class PlayingField extends JPanel implements MouseListener
 {
 	private int[][] bombs;			//1-8=nearby bombs ; 9=bomb
-	private int[][] fields;			//0=not opened ; 1=opened
+	private int[][] fields;			//0=not opened ; 1=opened ; 2=flag
 	private SettingsWindow settings;
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
@@ -50,7 +50,12 @@ public class PlayingField extends JPanel implements MouseListener
 		{
 			for(int left = 0; left < w; left++)
 			{
-				if(fields[left][top] == 1)
+				if(fields[left][top] == 0)
+				{
+					g.setColor(Color.DARK_GRAY);
+					g.fillRect(left*s, top*s, s, s);
+				}
+				else if(fields[left][top] == 1)
 				{
 					g.setColor(Color.GRAY);
 					g.fillRect(left*s, top*s, s, s);
@@ -61,9 +66,9 @@ public class PlayingField extends JPanel implements MouseListener
 					else if(bombs[left][top] > 0)
 						g.drawString(bombs[left][top] + "", left*s + s/2, top*s + s/2);
 				}
-				else
+				else if(fields[left][top] == 2)
 				{
-					g.setColor(Color.DARK_GRAY);
+					g.setColor(Color.RED);
 					g.fillRect(left*s, top*s, s, s);
 				}
 			}
@@ -134,9 +139,9 @@ public class PlayingField extends JPanel implements MouseListener
 		}
 	}
 	
-	public void openField(int mx, int my)
+	public void openField(int x, int y)
 	{		
-		fields[mx][my] = 1;
+		fields[x][y] = 1;
 		fieldsToOpen--;
 		paintComponent(this.getGraphics());
 		
@@ -155,44 +160,60 @@ public class PlayingField extends JPanel implements MouseListener
 			mainWindow.newGame();
 		}
 		
-		if(bombs[mx][my] < 1)
+		if(bombs[x][y] < 1)
 		{
 			int w = settings.getSWidth();
 			int h = settings.getSHeight();
 			
-			if(mx-1 >= 0 && my-1 >= 0 && mx-1 < w && my-1 < h)
-				if(fields[mx-1][my-1] == 0)
-					openField(mx-1,my-1);
-			if(mx >= 0 && my-1 >= 0 && mx < w && my-1 < h)
-				if(fields[mx][my-1] == 0)
-					openField(mx,my-1);
-			if(mx+1 >= 0 && my-1 >= 0 && mx+1 < w && my-1 < h)
-				if(fields[mx+1][my-1] == 0)
-					openField(mx+1,my-1);
-			if(mx-1 >= 0 && my >= 0 && mx-1 < w && my < h)
-				if(fields[mx-1][my] == 0)
-					openField(mx-1,my);
-			if(mx+1 >= 0 && my >= 0 && mx+1 < w && my < h)
-				if(fields[mx+1][my] == 0)
-					openField(mx+1,my);
-			if(mx-1 >= 0 && my+1 >= 0 && mx-1 < w && my+1 < h)
-				if(fields[mx-1][my+1] == 0)
-					openField(mx-1,my+1);
-			if(mx >= 0 && my+1 >= 0 && mx < w && my+1 < h)
-				if(fields[mx][my+1] == 0)
-					openField(mx,my+1);
-			if(mx+1 >= 0 && my+1 >= 0 && mx+1 < w && my+1 < h)
-				if(fields[mx+1][my+1] == 0)
-					openField(mx+1,my+1);
+			if(x-1 >= 0 && y-1 >= 0 && x-1 < w && y-1 < h)
+				if(fields[x-1][y-1] == 0)
+					openField(x-1,y-1);
+			if(x >= 0 && y-1 >= 0 && x < w && y-1 < h)
+				if(fields[x][y-1] == 0)
+					openField(x,y-1);
+			if(x+1 >= 0 && y-1 >= 0 && x+1 < w && y-1 < h)
+				if(fields[x+1][y-1] == 0)
+					openField(x+1,y-1);
+			if(x-1 >= 0 && y >= 0 && x-1 < w && y < h)
+				if(fields[x-1][y] == 0)
+					openField(x-1,y);
+			if(x+1 >= 0 && y >= 0 && x+1 < w && y < h)
+				if(fields[x+1][y] == 0)
+					openField(x+1,y);
+			if(x-1 >= 0 && y+1 >= 0 && x-1 < w && y+1 < h)
+				if(fields[x-1][y+1] == 0)
+					openField(x-1,y+1);
+			if(x >= 0 && y+1 >= 0 && x < w && y+1 < h)
+				if(fields[x][y+1] == 0)
+					openField(x,y+1);
+			if(x+1 >= 0 && y+1 >= 0 && x+1 < w && y+1 < h)
+				if(fields[x+1][y+1] == 0)
+					openField(x+1,y+1);
 		}
 	}
-
+	
+	public void gameOver()
+	{
+		for(int top = 0; top < settings.getSHeight(); top++)
+		{
+			for(int left = 0; left < settings.getSWidth(); left++)
+			{
+				this.fields[left][top] = 1;
+			}
+		}
+		paintComponent(this.getGraphics());
+		
+		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
+		mainWindow.newGame();
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
 		if(e.getClickCount() == 2)
+		{
 			System.out.println("Doppelklick!!");
+		}
 	}
 
 
@@ -220,28 +241,23 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
-		if(e.getButton() == MouseEvent.BUTTON1)
+		int mx = e.getX()/settings.getSScaling();
+		int my = e.getY()/settings.getSScaling();
+		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my] != 2)
 		{
-			int mx = e.getX()/settings.getSScaling();
-			int my = e.getY()/settings.getSScaling();
 			if(bombs[mx][my] == 9)
 			{
-				for(int top = 0; top < settings.getSHeight(); top++)
-				{
-					for(int left = 0; left < settings.getSWidth(); left++)
-					{
-						this.fields[left][top] = 1;
-					}
-				}
-				paintComponent(this.getGraphics());
-				
-				JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
-				mainWindow.newGame();
+				gameOver();
 			}
 			if(fields[mx][my] != 1)
 			{
 				openField(mx,my);
 			}
+		}
+		else if(e.getButton() == MouseEvent.BUTTON3)
+		{
+			fields[mx][my] = 2;
+			paintComponent(this.getGraphics());
 		}
 	}
 }
