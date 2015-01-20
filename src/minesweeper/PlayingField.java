@@ -133,6 +133,59 @@ public class PlayingField extends JPanel implements MouseListener
 			}
 		}
 	}
+	
+	public void openField(int mx, int my)
+	{		
+		fields[mx][my] = 1;
+		fieldsToOpen--;
+		paintComponent(this.getGraphics());
+		
+		if(fieldsToOpen < 1)
+		{
+			for(int top = 0; top < settings.getSHeight(); top++)
+			{
+				for(int left = 0; left < settings.getSWidth(); left++)
+				{
+					this.fields[left][top] = 1;
+				}
+			}
+			paintComponent(this.getGraphics());
+			
+			JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
+			mainWindow.newGame();
+		}
+		
+		if(bombs[mx][my] < 1)
+		{
+			int w = settings.getSWidth();
+			int h = settings.getSHeight();
+			
+			if(mx-1 >= 0 && my-1 >= 0 && mx-1 < w && my-1 < h)
+				if(fields[mx-1][my-1] == 0)
+					openField(mx-1,my-1);
+			if(mx >= 0 && my-1 >= 0 && mx < w && my-1 < h)
+				if(fields[mx][my-1] == 0)
+					openField(mx,my-1);
+			if(mx+1 >= 0 && my-1 >= 0 && mx+1 < w && my-1 < h)
+				if(fields[mx+1][my-1] == 0)
+					openField(mx+1,my-1);
+			if(mx-1 >= 0 && my >= 0 && mx-1 < w && my < h)
+				if(fields[mx-1][my] == 0)
+					openField(mx-1,my);
+			if(mx+1 >= 0 && my >= 0 && mx+1 < w && my < h)
+				if(fields[mx+1][my] == 0)
+					openField(mx+1,my);
+			if(mx-1 >= 0 && my+1 >= 0 && mx-1 < w && my+1 < h)
+				if(fields[mx-1][my+1] == 0)
+					openField(mx-1,my+1);
+			if(mx >= 0 && my+1 >= 0 && mx < w && my+1 < h)
+				if(fields[mx][my+1] == 0)
+					openField(mx,my+1);
+			if(mx+1 >= 0 && my+1 >= 0 && mx+1 < w && my+1 < h)
+				if(fields[mx+1][my+1] == 0)
+					openField(mx+1,my+1);
+		}
+	}
 
 
 	@Override
@@ -187,23 +240,7 @@ public class PlayingField extends JPanel implements MouseListener
 			}
 			if(fields[mx][my] != 1)
 			{
-				fields[mx][my] = 1;
-				fieldsToOpen--;
-				paintComponent(this.getGraphics());
-				if(fieldsToOpen < 1)
-				{
-					for(int top = 0; top < settings.getSHeight(); top++)
-					{
-						for(int left = 0; left < settings.getSWidth(); left++)
-						{
-							this.fields[left][top] = 1;
-						}
-					}
-					paintComponent(this.getGraphics());
-					
-					JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
-					mainWindow.newGame();
-				}
+				openField(mx,my);
 			}
 		}
 	}

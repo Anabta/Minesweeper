@@ -17,7 +17,7 @@ public class MainWindow extends JFrame
 	
 	public MainWindow()
 	{
-		settings = new SettingsWindow(SettingsWindow.DIF_EASY, this);
+		settings = new SettingsWindow(SettingsWindow.DIF_HARD, this);
 		//settings = new SettingsWindow(30,15,40,50,200,200);
 		
 		playingField = null;
@@ -38,7 +38,7 @@ public class MainWindow extends JFrame
 		this.playingField = null;
 		
 		this.playingField = new PlayingField(settings,this);
-		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +53));
+		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +51));
 		this.setLocation(new Point(settings.getSPxLeft(),settings.getSPxTop()));
 		this.setContentPane(playingField);
 		
