@@ -12,8 +12,7 @@ import javax.swing.JPanel;
 
 public class PlayingField extends JPanel implements MouseListener
 {
-	private int[][] bombs;			//1-8=nearby bombs ; 9=bomb
-	private int[][] fields;			//0=not opened ; 1=opened ; 2=flag
+	private Field[][] fields;			//0=not opened ; 1=opened ; 2=flag
 	private SettingsWindow settings;
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
@@ -26,11 +25,10 @@ public class PlayingField extends JPanel implements MouseListener
 		int w = settings.getSWidth();
 		int h = settings.getSHeight();
 		
-		this.bombs = new int[w][h];
-		this.fields = new int[w][h];
+		this.fields = new Field[w][h];
 		
-		this.placeBombs();
 		this.initFields();
+		this.placeBombs();
 		this.setSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
 				
 		this.fieldsToOpen = (settings.getSWidth()*settings.getSHeight())-settings.getSBombCount();
@@ -50,23 +48,23 @@ public class PlayingField extends JPanel implements MouseListener
 		{
 			for(int left = 0; left < w; left++)
 			{
-				if(fields[left][top] == 0)
+				if(fields[left][top].getFieldStatus() == Field.NOT_OPENED)
 				{
 					g.setColor(Color.DARK_GRAY);
 					g.fillRect(left*s, top*s, s, s);
 				}
-				else if(fields[left][top] == 1)
+				else if(fields[left][top].getFieldStatus() == Field.OPENED)
 				{
 					g.setColor(Color.GRAY);
 					g.fillRect(left*s, top*s, s, s);
 					
 					g.setColor(Color.BLACK);
-					if(bombs[left][top] == 9)
+					if(fields[left][top].getBombStatus() == Field.BOMBED)
 						g.drawString("x", left*s + s/2, top*s + s/2);
-					else if(bombs[left][top] > 0)
-						g.drawString(bombs[left][top] + "", left*s + s/2, top*s + s/2);
+					else if(fields[left][top].getBombStatus() > 0)
+						g.drawString(fields[left][top].getBombStatus() + "", left*s + s/2, top*s + s/2);
 				}
-				else if(fields[left][top] == 2)
+				else if(fields[left][top].getFieldStatus() == Field.FLAGGED)
 				{
 					g.setColor(Color.RED);
 					g.fillRect(left*s, top*s, s, s);
@@ -89,12 +87,8 @@ public class PlayingField extends JPanel implements MouseListener
 	private void initFields()
 	{
 		for(int top = 0; top < settings.getSHeight(); top++)
-		{
 			for(int left = 0; left < settings.getSWidth(); left++)
-			{
-				this.fields[left][top] = 0;
-			}
-		}
+				this.fields[left][top] = new Field(left,top,settings);
 	}
 	
 	private void placeBombs()
@@ -102,38 +96,38 @@ public class PlayingField extends JPanel implements MouseListener
 		int w = settings.getSWidth();
 		int h = settings.getSHeight();
 		
-		int left, top;
+		int x, y;
 		for(int i = 0; i < settings.getSBombCount(); )
 		{
-			left = (int) (Math.random()*w);
-			top = (int) (Math.random()*h);
-			if(bombs[left][top] != 9)
+			x = (int) (Math.random()*w);
+			y = (int) (Math.random()*h);
+			if(fields[x][y].getBombStatus() != 9)
 			{
-				bombs[left][top] = 9;
-				if(left-1 >= 0 && top-1 >= 0 && left-1 < w && top-1 < h)
-					if(bombs[left-1][top-1] != 9)
-						bombs[left-1][top-1]++;
-				if(left >= 0 && top-1 >= 0 && left < w && top-1 < h)
-					if(bombs[left][top-1] != 9)
-						bombs[left][top-1]++;
-				if(left+1 >= 0 && top-1 >= 0 && left+1 < w && top-1 < h)
-					if(bombs[left+1][top-1] != 9)
-						bombs[left+1][top-1]++;
-				if(left-1 >= 0 && top >= 0 && left-1 < w && top < h)
-					if(bombs[left-1][top] != 9)
-						bombs[left-1][top]++;
-				if(left+1 >= 0 && top >= 0 && left+1 < w && top < h)
-					if(bombs[left+1][top] != 9)
-						bombs[left+1][top]++;
-				if(left-1 >= 0 && top+1 >= 0 && left-1 < w && top+1 < h)
-					if(bombs[left-1][top+1] != 9)
-						bombs[left-1][top+1]++;
-				if(left >= 0 && top+1 >= 0 && left < w && top+1 < h)
-					if(bombs[left][top+1] != 9)
-						bombs[left][top+1]++;
-				if(left+1 >= 0 && top+1 >= 0 && left+1 < w && top+1 < h)
-					if(bombs[left+1][top+1] != 9)
-						bombs[left+1][top+1]++;
+				fields[x][y].setBombStatus(Field.BOMBED);
+				if(fields[x][y].checkBounds(Field.TOP_LEFT))
+					if(fields[x-1][y-1].getBombStatus() != Field.BOMBED)
+						fields[x-1][y-1].incBombs();
+				if(fields[x][y].checkBounds(Field.TOP))
+					if(fields[x][y-1].getBombStatus() != Field.BOMBED)
+						fields[x][y-1].incBombs();
+				if(fields[x][y].checkBounds(Field.TOP_RIGHT))
+					if(fields[x+1][y-1].getBombStatus() != Field.BOMBED)
+						fields[x+1][y-1].incBombs();
+				if(fields[x][y].checkBounds(Field.LEFT))
+					if(fields[x-1][y].getBombStatus() != Field.BOMBED)
+						fields[x-1][y].incBombs();
+				if(fields[x][y].checkBounds(Field.RIGHT))
+					if(fields[x+1][y].getBombStatus() != Field.BOMBED)
+						fields[x+1][y].incBombs();
+				if(fields[x][y].checkBounds(Field.BOT_LEFT))
+					if(fields[x-1][y+1].getBombStatus() != Field.BOMBED)
+						fields[x-1][y+1].incBombs();
+				if(fields[x][y].checkBounds(Field.BOT))
+					if(fields[x][y+1].getBombStatus() != Field.BOMBED)
+						fields[x][y+1].incBombs();
+				if(fields[x][y].checkBounds(Field.BOT_RIGHT))
+					if(fields[x+1][y+1].getBombStatus() != Field.BOMBED)
+						fields[x+1][y+1].incBombs();
 				i++;
 			}
 		}
@@ -141,7 +135,7 @@ public class PlayingField extends JPanel implements MouseListener
 	
 	public void openField(int x, int y)
 	{		
-		fields[x][y] = 1;
+		fields[x][y].setFieldStatus(Field.OPENED);
 		fieldsToOpen--;
 		paintComponent(this.getGraphics());
 		
@@ -151,7 +145,7 @@ public class PlayingField extends JPanel implements MouseListener
 			{
 				for(int left = 0; left < settings.getSWidth(); left++)
 				{
-					this.fields[left][top] = 1;
+					this.fields[left][top].setFieldStatus(Field.OPENED);
 				}
 			}
 			paintComponent(this.getGraphics());
@@ -160,35 +154,35 @@ public class PlayingField extends JPanel implements MouseListener
 			mainWindow.newGame();
 		}
 		
-		if(bombs[x][y] < 1)
+		if(fields[x][y].getBombStatus() == 0)
 		{
 			int w = settings.getSWidth();
 			int h = settings.getSHeight();
 			
-			if(x-1 >= 0 && y-1 >= 0 && x-1 < w && y-1 < h)
-				if(fields[x-1][y-1] == 0)
+			if(fields[x][y].checkBounds(Field.TOP_LEFT))
+				if(fields[x-1][y-1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x-1,y-1);
-			if(x >= 0 && y-1 >= 0 && x < w && y-1 < h)
-				if(fields[x][y-1] == 0)
+			if(fields[x][y].checkBounds(Field.TOP))
+				if(fields[x][y-1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x,y-1);
-			if(x+1 >= 0 && y-1 >= 0 && x+1 < w && y-1 < h)
-				if(fields[x+1][y-1] == 0)
+			if(fields[x][y].checkBounds(Field.TOP_RIGHT))
+				if(fields[x+1][y-1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x+1,y-1);
-			if(x-1 >= 0 && y >= 0 && x-1 < w && y < h)
-				if(fields[x-1][y] == 0)
+			if(fields[x][y].checkBounds(Field.LEFT))
+				if(fields[x-1][y].getFieldStatus() == Field.NOT_OPENED)
 					openField(x-1,y);
-			if(x+1 >= 0 && y >= 0 && x+1 < w && y < h)
-				if(fields[x+1][y] == 0)
+			if(fields[x][y].checkBounds(Field.RIGHT))
+				if(fields[x+1][y].getFieldStatus() == Field.NOT_OPENED)
 					openField(x+1,y);
-			if(x-1 >= 0 && y+1 >= 0 && x-1 < w && y+1 < h)
-				if(fields[x-1][y+1] == 0)
+			if(fields[x][y].checkBounds(Field.BOT_LEFT))
+				if(fields[x-1][y+1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x-1,y+1);
-			if(x >= 0 && y+1 >= 0 && x < w && y+1 < h)
-				if(fields[x][y+1] == 0)
+			if(fields[x][y].checkBounds(Field.BOT))
+				if(fields[x][y+1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x,y+1);
-			if(x+1 >= 0 && y+1 >= 0 && x+1 < w && y+1 < h)
-				if(fields[x+1][y+1] == 0)
-					openField(x+1,y+1);
+			if(fields[x][y].checkBounds(Field.BOT_RIGHT))
+				if(fields[x+1][y+1].getFieldStatus() == Field.NOT_OPENED)
+					openField(x+1,y+1);			
 		}
 	}
 	
@@ -198,7 +192,7 @@ public class PlayingField extends JPanel implements MouseListener
 		{
 			for(int left = 0; left < settings.getSWidth(); left++)
 			{
-				this.fields[left][top] = 1;
+				this.fields[left][top].setFieldStatus(Field.OPENED);
 			}
 		}
 		paintComponent(this.getGraphics());
@@ -243,20 +237,23 @@ public class PlayingField extends JPanel implements MouseListener
 	{
 		int mx = e.getX()/settings.getSScaling();
 		int my = e.getY()/settings.getSScaling();
-		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my] != 2)
+		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my].getFieldStatus() != Field.FLAGGED)
 		{
-			if(bombs[mx][my] == 9)
+			if(fields[mx][my].getBombStatus() == Field.BOMBED)
 			{
 				gameOver();
 			}
-			if(fields[mx][my] != 1)
+			if(fields[mx][my].getFieldStatus() != Field.OPENED)
 			{
 				openField(mx,my);
 			}
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3)
 		{
-			fields[mx][my] = 2;
+			if(fields[mx][my].getFieldStatus() == Field.NOT_OPENED)
+				fields[mx][my].setFieldStatus(Field.FLAGGED);
+			else if(fields[mx][my].getFieldStatus() == Field.FLAGGED)
+				fields[mx][my].setFieldStatus(Field.NOT_OPENED);
 			paintComponent(this.getGraphics());
 		}
 	}

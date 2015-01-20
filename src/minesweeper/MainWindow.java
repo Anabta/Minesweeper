@@ -17,7 +17,7 @@ public class MainWindow extends JFrame
 	
 	public MainWindow()
 	{
-		settings = new SettingsWindow(SettingsWindow.DIF_HARD, this);
+		settings = new SettingsWindow(SettingsWindow.DIF_EASY, this);
 		//settings = new SettingsWindow(30,15,40,50,200,200);
 		
 		playingField = null;
