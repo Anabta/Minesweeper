@@ -17,21 +17,31 @@ public class MainWindow extends JFrame
 	
 	public MainWindow()
 	{
-		settings = new SettingsWindow(SettingsWindow.DIF_EASY);
+		settings = new SettingsWindow(SettingsWindow.DIF_EASY, this);
 		//settings = new SettingsWindow(30,15,40,50,200,200);
-		Dimension prefSize = new Dimension();
-		playingField = new PlayingField(settings);
-		this.setResizable(false);
-		this.setContentPane(playingField);
-		prefSize.setSize(playingField.getPreferredSize().getWidth()+7, playingField.getPreferredSize().getHeight() +53);
-		this.setPreferredSize(prefSize);
+		
+		playingField = null;
+		
 		this.setTitle("Minesweeper");
-		this.setLocation(new Point(settings.getSPxLeft(),settings.getSPxTop()));
+		this.setResizable(false);
+		this.setJMenuBar(createMenuBar());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.setJMenuBar(createMenuBar());
+		this.newGame();
 		
-		this.pack();
+		this.setVisible(true);
+	}
+	
+	public void newGame()
+	{
+		this.setVisible(false);
+		this.playingField = null;
+		
+		this.playingField = new PlayingField(settings,this);
+		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +53));
+		this.setLocation(new Point(settings.getSPxLeft(),settings.getSPxTop()));
+		this.setContentPane(playingField);
+		
 		this.setVisible(true);
 	}
 	

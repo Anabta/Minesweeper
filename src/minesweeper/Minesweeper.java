@@ -1,7 +1,6 @@
 package minesweeper;
 
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class Minesweeper
 {

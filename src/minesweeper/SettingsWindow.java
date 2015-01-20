@@ -1,6 +1,5 @@
 package minesweeper;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.security.InvalidParameterException;
@@ -22,12 +21,14 @@ public class SettingsWindow extends JFrame
 	private int sDifficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
 	private int sPxLeft;
 	private int sPxTop;
-	private boolean isVisible;
 	
+	private MainWindow mainWindow;
 	private SettingsPanel sp;
 	
-	public SettingsWindow(int width, int height, int scaling, int bombCount, int left, int top)
+	public SettingsWindow(int width, int height, int scaling, int bombCount, int left, int top, MainWindow mw)
 	{
+		this.mainWindow = mw;
+		
 		this.sWidth = width;
 		this.sHeight = height;
 		this.sScaling = scaling;
@@ -35,16 +36,15 @@ public class SettingsWindow extends JFrame
 		this.sPxLeft = left;
 		this.sPxTop = top;
 		this.sDifficulty = 0;
-		this.isVisible = false;
 		this.initWindow();
 	}
 	
-	public SettingsWindow(int diff)
+	public SettingsWindow(int diff, MainWindow mw)
 	{
+		this.mainWindow = mw;
 		if(diff > 0 && diff < 4)
 		{
 			this.setSDifficulty(diff);
-			this.isVisible = false;
 			this.initWindow();
 		}
 		else
@@ -59,10 +59,9 @@ public class SettingsWindow extends JFrame
 		this.setLocation(new Point(100,100));
 		this.setResizable(false);
 		sp = new SettingsPanel(this);
-		sp.setPreferredSize(new Dimension(400,150));
-		this.setPreferredSize(sp.getPreferredSize());
+		sp.setSize(new Dimension(400,150));
+		this.setSize(sp.getSize());
 		this.setContentPane(sp);
-		this.pack();
 		this.setVisible(false);
 	}
 
@@ -156,6 +155,7 @@ public class SettingsWindow extends JFrame
 	
 	public void setCustomParameters(int width, int height, int bombCount)
 	{
+		this.sDifficulty = DIF_CUSTOM;
 		this.sWidth = width;
 		this.sHeight = height;
 		this.sBombCount = bombCount;
@@ -177,9 +177,8 @@ public class SettingsWindow extends JFrame
 		this.sPxTop = pxTop;
 	}
 	
-	public void setVisible(boolean isVisible)
+	public void newGame()
 	{
-		this.isVisible = isVisible;
-		super.setVisible(isVisible);
+		mainWindow.newGame();
 	}
 }

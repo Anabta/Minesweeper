@@ -15,11 +15,13 @@ public class PlayingField extends JPanel implements MouseListener
 	private int[][] bombs;			//1-8=nearby bombs ; 9=bomb
 	private int[][] fields;			//0=not opened ; 1=opened
 	private SettingsWindow settings;
+	private MainWindow mainWindow;
 	private int fieldsToOpen;
 	
-	public PlayingField(SettingsWindow set)
+	public PlayingField(SettingsWindow set, MainWindow mw)
 	{
 		this.settings = set;
+		this.mainWindow = mw;
 		
 		int w = settings.getSWidth();
 		int h = settings.getSHeight();
@@ -29,8 +31,8 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		this.placeBombs();
 		this.initFields();
-		this.setPreferredSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
-		
+		this.setSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
+				
 		this.fieldsToOpen = (settings.getSWidth()*settings.getSHeight())-settings.getSBombCount();
 		
 		addMouseListener(this);
@@ -144,24 +146,21 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+	
 	}
 
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-		
+
 	}
 
 
@@ -174,8 +173,17 @@ public class PlayingField extends JPanel implements MouseListener
 			int my = e.getY()/settings.getSScaling();
 			if(bombs[mx][my] == 9)
 			{
+				for(int top = 0; top < settings.getSHeight(); top++)
+				{
+					for(int left = 0; left < settings.getSWidth(); left++)
+					{
+						this.fields[left][top] = 1;
+					}
+				}
+				paintComponent(this.getGraphics());
+				
 				JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
-				System.exit(0);
+				mainWindow.newGame();
 			}
 			if(fields[mx][my] != 1)
 			{
@@ -184,8 +192,17 @@ public class PlayingField extends JPanel implements MouseListener
 				paintComponent(this.getGraphics());
 				if(fieldsToOpen < 1)
 				{
+					for(int top = 0; top < settings.getSHeight(); top++)
+					{
+						for(int left = 0; left < settings.getSWidth(); left++)
+						{
+							this.fields[left][top] = 1;
+						}
+					}
+					paintComponent(this.getGraphics());
+					
 					JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
-					System.exit(0);
+					mainWindow.newGame();
 				}
 			}
 		}

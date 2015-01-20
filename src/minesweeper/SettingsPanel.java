@@ -1,17 +1,10 @@
 package minesweeper;
 
-import java.awt.Button;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.BorderLayout;
 
-import javax.swing.AbstractButton;
-import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -103,6 +96,7 @@ public class SettingsPanel extends JPanel
 				parent.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
 			}
 			parent.setVisible(false);
+			parent.newGame();
 		}});
 		JButton butCancel = new JButton("Abbrechen");
 		butCancel.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
