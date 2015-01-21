@@ -117,28 +117,28 @@ public class SettingsWindow extends JFrame
 		{
 			this.sWidth = 9;
 			this.sHeight = 9;
-			this.sScaling = 50;
+			this.sScaling = 60;
 			this.sBombCount = 10;
-			this.sPxLeft = 200;
-			this.sPxTop = 200;
+			this.sPxLeft = 300;
+			this.sPxTop = 100;
 		}
 		else if(difficulty == DIF_MEDIUM)		//medium
 		{
 			this.sWidth = 16;
 			this.sHeight = 16;
-			this.sScaling = 40;
+			this.sScaling = 50;
 			this.sBombCount = 40;
-			this.sPxLeft = 200;
-			this.sPxTop = 200;
+			this.sPxLeft = 300;
+			this.sPxTop = 20;
 		}
 		else if(difficulty == DIF_HARD)		//hard
 		{
 			this.sWidth = 30;
 			this.sHeight = 16;
-			this.sScaling = 30;
+			this.sScaling = 40;
 			this.sBombCount = 99;
 			this.sPxLeft = 200;
-			this.sPxTop = 200;
+			this.sPxTop = 20;
 		}
 		else if(difficulty == DIF_CUSTOM)
 		{

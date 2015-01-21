@@ -135,12 +135,13 @@ public class PlayingField extends JPanel implements MouseListener
 	
 	public void openField(int x, int y)
 	{		
-		
 		if(fields[x][y].getBombStatus() == Field.BOMBED)
 		{
 			gameOver();
 			return;
 		}
+		if(fields[x][y].getFieldStatus() == Field.OPENED)
+			return;
 		
 		fields[x][y].setFieldStatus(Field.OPENED);
 		fieldsToOpen--;
@@ -162,10 +163,7 @@ public class PlayingField extends JPanel implements MouseListener
 		}
 		
 		if(fields[x][y].getBombStatus() == 0)
-		{
-			int w = settings.getSWidth();
-			int h = settings.getSHeight();
-			
+		{			
 			if(fields[x][y].checkBounds(Field.TOP_LEFT))
 				if(fields[x-1][y-1].getFieldStatus() == Field.NOT_OPENED)
 					openField(x-1,y-1);
