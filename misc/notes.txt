@@ -1,7 +1,5 @@
 Bugs:
-In the settings window: when you select custom but don't fill width/height/bombcount
-In the settings window: when not selecting anything but pressing ok nothing happens
-When using the double-click method, sometimes you just randomly won
+when a new game starts because of losing / winning you get an exception
 
 ToDos:
 put automatic opening of fields into another thread

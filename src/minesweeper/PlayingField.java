@@ -134,7 +134,12 @@ public class PlayingField extends JPanel implements MouseListener
 	}
 	
 	public void openField(int x, int y)
-	{		
+	{
+		this.openField(x, y, false);
+	}
+	
+	public void openField(int x, int y, boolean recursive)
+	{
 		if(fields[x][y].getBombStatus() == Field.BOMBED)
 		{
 			gameOver();
@@ -145,50 +150,42 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		fields[x][y].setFieldStatus(Field.OPENED);
 		fieldsToOpen--;
-		paintComponent(this.getGraphics());
 		
 		if(fieldsToOpen < 1)
 		{
-			for(int top = 0; top < settings.getSHeight(); top++)
-			{
-				for(int left = 0; left < settings.getSWidth(); left++)
-				{
-					this.fields[left][top].setFieldStatus(Field.OPENED);
-				}
-			}
-			paintComponent(this.getGraphics());
-			
-			JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
-			mainWindow.newGame();
+			youWin();
 		}
 		
 		if(fields[x][y].getBombStatus() == 0)
 		{			
 			if(fields[x][y].checkBounds(Field.TOP_LEFT))
 				if(fields[x-1][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y-1);
+					openField(x-1,y-1, true);
 			if(fields[x][y].checkBounds(Field.TOP))
 				if(fields[x][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x,y-1);
+					openField(x,y-1, true);
 			if(fields[x][y].checkBounds(Field.TOP_RIGHT))
 				if(fields[x+1][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y-1);
+					openField(x+1,y-1, true);
 			if(fields[x][y].checkBounds(Field.LEFT))
 				if(fields[x-1][y].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y);
+					openField(x-1,y, true);
 			if(fields[x][y].checkBounds(Field.RIGHT))
 				if(fields[x+1][y].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y);
+					openField(x+1,y, true);
 			if(fields[x][y].checkBounds(Field.BOT_LEFT))
 				if(fields[x-1][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y+1);
+					openField(x-1,y+1, true);
 			if(fields[x][y].checkBounds(Field.BOT))
 				if(fields[x][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x,y+1);
+					openField(x,y+1, true);
 			if(fields[x][y].checkBounds(Field.BOT_RIGHT))
 				if(fields[x+1][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y+1);
+					openField(x+1,y+1, true);
 		}
+		
+		if(recursive == false || settings.getSAnimation() == true)
+			paintComponent(this.getGraphics());			
 	}
 	
 	public void gameOver()
@@ -203,6 +200,21 @@ public class PlayingField extends JPanel implements MouseListener
 		paintComponent(this.getGraphics());
 		
 		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
+		mainWindow.newGame();
+	}
+	
+	public void youWin()
+	{
+		for(int top = 0; top < settings.getSHeight(); top++)
+		{
+			for(int left = 0; left < settings.getSWidth(); left++)
+			{
+				this.fields[left][top].setFieldStatus(Field.OPENED);
+			}
+		}
+		paintComponent(this.getGraphics());
+		
+		JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 

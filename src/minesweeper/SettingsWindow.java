@@ -21,6 +21,7 @@ public class SettingsWindow extends JFrame
 	private int sDifficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
 	private int sPxLeft;
 	private int sPxTop;
+	private boolean sAnimations;
 	
 	private MainWindow mainWindow;
 	private SettingsPanel sp;
@@ -36,6 +37,7 @@ public class SettingsWindow extends JFrame
 		this.sPxLeft = left;
 		this.sPxTop = top;
 		this.sDifficulty = 0;
+		this.sAnimations = false;
 		this.initWindow();
 	}
 	
@@ -51,6 +53,7 @@ public class SettingsWindow extends JFrame
 		{
 			throw new InvalidParameterException();
 		}
+		this.sAnimations = false;
 	}
 	
 	private void initWindow()
@@ -59,7 +62,7 @@ public class SettingsWindow extends JFrame
 		this.setLocation(new Point(100,100));
 		this.setResizable(false);
 		sp = new SettingsPanel(this);
-		sp.setSize(new Dimension(400,150));
+		sp.setSize(new Dimension(400,300));
 		this.setSize(sp.getSize());
 		this.setContentPane(sp);
 		this.setVisible(false);
@@ -180,5 +183,15 @@ public class SettingsWindow extends JFrame
 	public void newGame()
 	{
 		mainWindow.newGame();
+	}
+	
+	public void setSAnimation(boolean a)
+	{
+		this.sAnimations = a;
+	}
+	
+	public boolean getSAnimation()
+	{
+		return this.sAnimations;
 	}
 }

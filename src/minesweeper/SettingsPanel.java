@@ -24,32 +24,34 @@ public class SettingsPanel extends JPanel
 		
 		JPanel panSubmit = new JPanel(new GridLayout(1,2));
 		this.add(panSubmit, BorderLayout.PAGE_END);
-		JPanel panOverall = new JPanel(new GridLayout(1,2));
+		JPanel panOverall = new JPanel(new GridLayout(2,2));
 		this.add(panOverall, BorderLayout.CENTER);
-		JPanel panLeft = new JPanel(new GridLayout(3,1));
-		panOverall.add(panLeft);
-		JPanel panRight = new JPanel(new GridLayout(2,1));
-		panOverall.add(panRight);
+		JPanel panTopLeft = new JPanel(new GridLayout(3,1));
+		panOverall.add(panTopLeft);
+		JPanel panTopRight = new JPanel(new GridLayout(2,1));
+		panOverall.add(panTopRight);
 		JPanel panCustom = new JPanel(new GridLayout(3,2));
+		JPanel panBotLeft = new JPanel(new GridLayout(2,1));
+		panOverall.add(panBotLeft);
 		
 		final JRadioButton radBeginner = new JRadioButton("Anfänger");
 		final JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
 		final JRadioButton radExpert = new JRadioButton("Experte");
 		final JRadioButton radCustom = new JRadioButton("Benutzerdefiniert");
 		
-		ButtonGroup radGrp = new ButtonGroup();
-		radGrp.add(radBeginner);
-		radGrp.add(radIntermediate);
-		radGrp.add(radExpert);
-		radGrp.add(radCustom);
+		ButtonGroup radDifGrp = new ButtonGroup();
+		radDifGrp.add(radBeginner);
+		radDifGrp.add(radIntermediate);
+		radDifGrp.add(radExpert);
+		radDifGrp.add(radCustom);
 		
-		panLeft.add(radBeginner);
-		panLeft.add(radIntermediate);
-		panLeft.add(radExpert);
+		panTopLeft.add(radBeginner);
+		panTopLeft.add(radIntermediate);
+		panTopLeft.add(radExpert);
 		
-		panRight.add(radCustom);
+		panTopRight.add(radCustom);
 		
-		panRight.add(panCustom);
+		panTopRight.add(panCustom);
 		
 		JLabel labWidth = new JLabel("Breite:");
 		JLabel labHeight = new JLabel("Höhe:");
@@ -65,6 +67,16 @@ public class SettingsPanel extends JPanel
 		panCustom.add(txfHeight);
 		panCustom.add(labBombCount);
 		panCustom.add(txfBombCount);
+		
+		final JRadioButton radAnimationsOn = new JRadioButton("Animationen AN");
+		final JRadioButton radAnimationsOff = new JRadioButton("Animationen AUS");
+		
+		ButtonGroup radAnimGrp = new ButtonGroup();
+		radAnimGrp.add(radAnimationsOn);
+		radAnimGrp.add(radAnimationsOff);
+		
+		panBotLeft.add(radAnimationsOn);
+		panBotLeft.add(radAnimationsOff);
 		
 		JButton butOk = new JButton("OK");
 		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
@@ -83,9 +95,15 @@ public class SettingsPanel extends JPanel
 			}
 			else if(radCustom.isSelected())
 			{
+				if(txfWidth.getText().equals("") || txfHeight.getText().equals("") || txfBombCount.getText().equals(""))
+				{
+					JOptionPane.showMessageDialog(null, "Die eingegebenen Werte sind nicht gültig!","Fehler",JOptionPane.OK_CANCEL_OPTION);
+					return;
+				}
 				int enteredWidth = Integer.parseInt(txfWidth.getText());
 				int enteredHeight = Integer.parseInt(txfHeight.getText());
 				int enteredBombCount = Integer.parseInt(txfBombCount.getText());
+				
 				if(enteredWidth < 1 || enteredWidth > 100 || 
 						enteredHeight < 1 || enteredHeight > 100 ||
 						enteredBombCount < 1 || enteredBombCount > (enteredWidth * enteredHeight))
@@ -95,6 +113,11 @@ public class SettingsPanel extends JPanel
 				}
 				parent.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
 			}
+			if(radAnimationsOn.isSelected())
+				parent.setSAnimation(true);
+			else if(radAnimationsOff.isSelected())
+				parent.setSAnimation(false);
+			
 			parent.setVisible(false);
 			parent.newGame();
 		}});
