@@ -1,6 +1,8 @@
 Bugs:
 In the settings window: when you select custom but don't fill width/height/bombcount
 In the settings window: when not selecting anything but pressing ok nothing happens
+When using the double-click method, sometimes you just randomly won
 
 ToDos:
 put automatic opening of fields into another thread
+double clicking should open all fields nearby
