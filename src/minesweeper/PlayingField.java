@@ -81,23 +81,30 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		bufferGraphics.setColor(Color.BLACK);
 		for(int i = 0; i <= w; i++)
-		{
 			bufferGraphics.drawLine(i*s, 0, i*s, h*s);
-		}
 		
 		for(int i = 0; i <= h; i++)
-		{
 			bufferGraphics.drawLine(0, i*s, w*s, i*s);
-		}
 		
 		g.drawImage(buffer, 0, 0, null);
 	}
 	
 	private void initFields()
 	{
-		for(int top = 0; top < settings.getSHeight(); top++)
-			for(int left = 0; left < settings.getSWidth(); left++)
-				this.fields[left][top] = new Field(left,top,settings);
+		for(int y = 0; y < settings.getSHeight(); y++)
+			for(int x = 0; x < settings.getSWidth(); x++)
+				this.fields[x][y] = new Field(x,y,settings,this);
+		
+		for(int y = 0; y < settings.getSHeight(); y++)
+		{
+			for(int x = 0; x < settings.getSWidth(); x++)
+			{
+				fields[x][y].top = (y > 0) ? fields[x][y-1] : null;
+				fields[x][y].left = (x > 0) ? fields[x-1][y] : null;
+				fields[x][y].right = (x+1 < settings.getSWidth()) ? fields[x+1][y] : null;
+				fields[x][y].bottom = (y+1 < settings.getSHeight()) ? fields[x][y+1] : null;
+			}
+		}
 	}
 	
 	private void placeBombs()
@@ -105,107 +112,70 @@ public class PlayingField extends JPanel implements MouseListener
 		int w = settings.getSWidth();
 		int h = settings.getSHeight();
 		
-		int x, y;
-		for(int i = 0; i < settings.getSBombCount(); )
+		int x,y;
+		for(int i = 0; i < settings.getSBombCount(); i++)
 		{
 			x = (int) (Math.random()*w);
 			y = (int) (Math.random()*h);
-			if(fields[x][y].getBombStatus() != 9)
+			
+			if(fields[x][y].getBombStatus() != Field.BOMBED)
 			{
 				fields[x][y].setBombStatus(Field.BOMBED);
-				if(fields[x][y].checkBounds(Field.TOP_LEFT))
-					if(fields[x-1][y-1].getBombStatus() != Field.BOMBED)
-						fields[x-1][y-1].incBombs();
-				if(fields[x][y].checkBounds(Field.TOP))
-					if(fields[x][y-1].getBombStatus() != Field.BOMBED)
-						fields[x][y-1].incBombs();
-				if(fields[x][y].checkBounds(Field.TOP_RIGHT))
-					if(fields[x+1][y-1].getBombStatus() != Field.BOMBED)
-						fields[x+1][y-1].incBombs();
-				if(fields[x][y].checkBounds(Field.LEFT))
-					if(fields[x-1][y].getBombStatus() != Field.BOMBED)
-						fields[x-1][y].incBombs();
-				if(fields[x][y].checkBounds(Field.RIGHT))
-					if(fields[x+1][y].getBombStatus() != Field.BOMBED)
-						fields[x+1][y].incBombs();
-				if(fields[x][y].checkBounds(Field.BOT_LEFT))
-					if(fields[x-1][y+1].getBombStatus() != Field.BOMBED)
-						fields[x-1][y+1].incBombs();
-				if(fields[x][y].checkBounds(Field.BOT))
-					if(fields[x][y+1].getBombStatus() != Field.BOMBED)
-						fields[x][y+1].incBombs();
-				if(fields[x][y].checkBounds(Field.BOT_RIGHT))
-					if(fields[x+1][y+1].getBombStatus() != Field.BOMBED)
-						fields[x+1][y+1].incBombs();
-				i++;
+				for(Direction d : Direction.values())
+					if(fields[x][y].getNeighbour(d) != null)
+						if(fields[x][y].getNeighbour(d).getBombStatus() != Field.BOMBED)
+							fields[x][y].getNeighbour(d).incBombs();
 			}
 		}
 	}
 	
-	public void openField(int x, int y)
-	{
-		this.openField(x, y, false);
-	}
-	
-	public void openField(int x, int y, boolean recursive)
-	{
-		if(fields[x][y].getBombStatus() == Field.BOMBED)
-		{
-			gameOver();
-			return;
-		}
-		if(fields[x][y].getFieldStatus() == Field.OPENED)
-			return;
-		
-		fields[x][y].setFieldStatus(Field.OPENED);
-		fieldsToOpen--;
-		
-		if(fieldsToOpen < 1)
-		{
-			youWin();
-		}
-		
-		if(fields[x][y].getBombStatus() == 0)
-		{			
-			if(fields[x][y].checkBounds(Field.TOP_LEFT))
-				if(fields[x-1][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y-1, true);
-			if(fields[x][y].checkBounds(Field.TOP))
-				if(fields[x][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x,y-1, true);
-			if(fields[x][y].checkBounds(Field.TOP_RIGHT))
-				if(fields[x+1][y-1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y-1, true);
-			if(fields[x][y].checkBounds(Field.LEFT))
-				if(fields[x-1][y].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y, true);
-			if(fields[x][y].checkBounds(Field.RIGHT))
-				if(fields[x+1][y].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y, true);
-			if(fields[x][y].checkBounds(Field.BOT_LEFT))
-				if(fields[x-1][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x-1,y+1, true);
-			if(fields[x][y].checkBounds(Field.BOT))
-				if(fields[x][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x,y+1, true);
-			if(fields[x][y].checkBounds(Field.BOT_RIGHT))
-				if(fields[x+1][y+1].getFieldStatus() == Field.NOT_OPENED)
-					openField(x+1,y+1, true);
-		}
-		
-		if(recursive == false || settings.getSAnimation() == true)
-			paintComponent(this.getGraphics());			
-	}
+//	/**
+//	 * @deprecated
+//	 * @param f
+//	 */
+//	public void openField(Field f)
+//	{
+//		this.openField(f, false);
+//	}
+//	
+//	/**
+//	 * @deprecated
+//	 * @param f
+//	 * @param recursive
+//	 */
+//	public void openField(Field f, boolean recursive)
+//	{
+//		if(f.getBombStatus() == Field.BOMBED)
+//		{
+//			gameOver();
+//			return;
+//		}
+//		
+//		if(f.getFieldStatus() == Field.OPENED)
+//			return;
+//		
+//		f.setFieldStatus(Field.OPENED);
+//		fieldsToOpen--;
+//		
+//		if(fieldsToOpen == 0)
+//			youWin();
+//		
+//		if(f.getBombStatus() == 0)
+//			for(Direction d : Direction.values())
+//				if(f.getNeighbour(d) != null)
+//					if(f.getNeighbour(d).getFieldStatus() == Field.NOT_OPENED)
+//						openField(f.getNeighbour(d),true);
+//		
+//		if(recursive == false || settings.getSAnimation() == true)
+//			paintComponent(this.getGraphics());	
+//	}
 	
 	public void gameOver()
 	{
 		for(int top = 0; top < settings.getSHeight(); top++)
-		{
 			for(int left = 0; left < settings.getSWidth(); left++)
-			{
 				this.fields[left][top].setFieldStatus(Field.OPENED);
-			}
-		}
+		
 		paintComponent(this.getGraphics());
 		
 		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
@@ -215,16 +185,23 @@ public class PlayingField extends JPanel implements MouseListener
 	public void youWin()
 	{
 		for(int top = 0; top < settings.getSHeight(); top++)
-		{
 			for(int left = 0; left < settings.getSWidth(); left++)
-			{
 				this.fields[left][top].setFieldStatus(Field.OPENED);
-			}
-		}
+		
 		paintComponent(this.getGraphics());
 		
 		JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
+	}
+	
+	public int getFieldsToOpen()
+	{
+		return fieldsToOpen;
+	}
+	
+	public void decFieldsToOpen()
+	{
+		fieldsToOpen--;
 	}
 
 	@Override
@@ -235,63 +212,21 @@ public class PlayingField extends JPanel implements MouseListener
 			int x = e.getX()/settings.getSScaling();
 			int y = e.getY()/settings.getSScaling();
 			int markedNeighbours = 0;
+			Field f = fields[x][y];
 			
-			if(fields[x][y].getBombStatus() > 0 && fields[x][y].getBombStatus() < Field.BOMBED)
+			if(f.getBombStatus() > 0 && f.getBombStatus() < Field.BOMBED)
 			{
-				if(fields[x][y].checkBounds(Field.TOP_LEFT))
-					if(fields[x-1][y-1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.TOP))
-					if(fields[x][y-1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.TOP_RIGHT))
-					if(fields[x+1][y-1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.LEFT))
-					if(fields[x-1][y].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.RIGHT))
-					if(fields[x+1][y].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.BOT_LEFT))
-					if(fields[x-1][y+1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.BOT))
-					if(fields[x][y+1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
-				if(fields[x][y].checkBounds(Field.BOT_RIGHT))
-					if(fields[x+1][y+1].getFieldStatus() == Field.FLAGGED)
-						markedNeighbours++;
+				for(Direction d : Direction.values())
+					if(f.getNeighbour(d) != null)
+						if(f.getNeighbour(d).getFieldStatus() == Field.FLAGGED)
+							markedNeighbours++;
 				
 				if(markedNeighbours == fields[x][y].getBombStatus())
-				{
-					if(fields[x][y].checkBounds(Field.TOP_LEFT))
-						if(fields[x-1][y-1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x-1,y-1);
-					if(fields[x][y].checkBounds(Field.TOP))
-						if(fields[x][y-1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x,y-1);
-					if(fields[x][y].checkBounds(Field.TOP_RIGHT))
-						if(fields[x+1][y-1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x+1,y-1);
-					if(fields[x][y].checkBounds(Field.LEFT))
-						if(fields[x-1][y].getFieldStatus() == Field.NOT_OPENED)
-							openField(x-1,y);
-					if(fields[x][y].checkBounds(Field.RIGHT))
-						if(fields[x+1][y].getFieldStatus() == Field.NOT_OPENED)
-							openField(x+1,y);
-					if(fields[x][y].checkBounds(Field.BOT_LEFT))
-						if(fields[x-1][y+1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x-1,y+1);
-					if(fields[x][y].checkBounds(Field.BOT))
-						if(fields[x][y+1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x,y+1);
-					if(fields[x][y].checkBounds(Field.BOT_RIGHT))
-						if(fields[x+1][y+1].getFieldStatus() == Field.NOT_OPENED)
-							openField(x+1,y+1);
-				}
-			}
-			
+					for(Direction d : Direction.values())
+						if(f.getNeighbour(d) != null)
+							if(f.getNeighbour(d).getFieldStatus() == Field.NOT_OPENED)
+								f.getNeighbour(d).openField();
+			}			
 		}
 	}
 
@@ -324,7 +259,7 @@ public class PlayingField extends JPanel implements MouseListener
 		int my = e.getY()/settings.getSScaling();
 		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my].getFieldStatus() != Field.FLAGGED)
 		{
-			openField(mx,my);
+			fields[mx][my].openField();
 		}
 		else if(e.getButton() == MouseEvent.BUTTON3)
 		{

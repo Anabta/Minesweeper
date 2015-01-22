@@ -2,15 +2,6 @@ package minesweeper;
 
 public class Field
 {
-	public static final int TOP_LEFT = 1;
-	public static final int TOP = 2;
-	public static final int TOP_RIGHT = 3;
-	public static final int LEFT = 4;
-	public static final int RIGHT = 5;
-	public static final int BOT_LEFT = 6;
-	public static final int BOT = 7;
-	public static final int BOT_RIGHT = 8;
-	
 	public static final int NOT_OPENED = 0;
 	public static final int OPENED = 1;
 	public static final int FLAGGED = 2;
@@ -18,29 +9,23 @@ public class Field
 	public static final int BOMBED = 9;
 	
 	private SettingsWindow settings;
+	private PlayingField playingField;
 	
 	private int fieldStatus;
 	private int bombStatus;
-	private int x;
-	private int y;
-	private boolean topRow;
-	private boolean bottomRow;
-	private boolean leftCol;
-	private boolean rightCol;
 	
-	public Field(int x, int y, SettingsWindow set)
+	public Field top = null;
+	public Field left = null;
+	public Field right = null;
+	public Field bottom = null;
+	
+	public Field(int x, int y, SettingsWindow set, PlayingField pf)
 	{
 		this.settings = set;
-		this.x = x;
-		this.y = y;
+		this.playingField = pf;
 		
 		fieldStatus = NOT_OPENED;
 		bombStatus = 0;
-		
-		leftCol = (x == 0) ? true : false;
-		rightCol = (x < settings.getSWidth()-1) ? false : true;
-		topRow = (y == 0) ? true : false;
-		bottomRow = (y < settings.getSHeight()-1) ? false : true;
 	}
 	
 	public int getFieldStatus()
@@ -70,23 +55,57 @@ public class Field
 		this.bombStatus++;
 	}
 	
-	public boolean checkBounds(int pos)
+	public Field getNeighbour(Direction dir)
 	{
-		if(topRow == false && bottomRow == false && leftCol == false && rightCol == false)
-			return true;
-		
-		switch (pos)
+		try
 		{
-			case TOP_LEFT: return (topRow || leftCol) ? false : true;
-			case TOP: return (topRow) ? false : true;
-			case TOP_RIGHT: return (topRow || rightCol) ? false : true;
-			case LEFT: return (leftCol) ? false : true;
-			case RIGHT: return (rightCol) ? false : true;
-			case BOT_LEFT: return (bottomRow || leftCol) ? false : true;
-			case BOT: return (bottomRow) ? false : true;
-			case BOT_RIGHT: return (bottomRow || rightCol) ? false : true;
+			switch (dir)
+			{
+			case TOP_LEFT: return this.top.left;
+			case TOP: return this.top;
+			case TOP_RIGHT: return this.top.right;
+			case LEFT: return this.left;
+			case RIGHT: return this.right;
+			case BOT_LEFT: return this.bottom.left;
+			case BOT: return this.bottom;
+			case BOT_RIGHT: return this.bottom.right;
+			default: return null;
+			}
+		} catch (NullPointerException e)
+		{
+			return null;
+		}
+	}
+	
+	public void openField()
+	{
+		this.openField(false);
+	}
+	
+	private void openField(boolean recursive)
+	{
+		if(this.getBombStatus() == Field.BOMBED)
+		{
+			playingField.gameOver();
+			return;
 		}
 		
-		return false;
+		if(this.getFieldStatus() == Field.OPENED)
+			return;
+		
+		this.setFieldStatus(Field.OPENED);
+		playingField.decFieldsToOpen();
+		
+		if(playingField.getFieldsToOpen() == 0)
+			playingField.youWin();
+		
+		if(this.getBombStatus() == 0)
+			for(Direction d : Direction.values())
+				if(this.getNeighbour(d) != null)
+					if(this.getNeighbour(d).getFieldStatus() == Field.NOT_OPENED)
+						this.getNeighbour(d).openField(true);
+		
+		if(recursive == false || settings.getSAnimation() == true)
+			playingField.paintComponent(playingField.getGraphics());
 	}
 }
