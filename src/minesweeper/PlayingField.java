@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,6 +17,8 @@ public class PlayingField extends JPanel implements MouseListener
 	private SettingsWindow settings;
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
+	
+	private BufferedImage buffer;
 	
 	public PlayingField(SettingsWindow set, MainWindow mw)
 	{
@@ -30,7 +33,9 @@ public class PlayingField extends JPanel implements MouseListener
 		this.initFields();
 		this.placeBombs();
 		this.setSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
-				
+		
+		buffer = new BufferedImage(w*settings.getSScaling(),h*settings.getSScaling(),BufferedImage.TYPE_INT_RGB);
+		
 		this.fieldsToOpen = (settings.getSWidth()*settings.getSHeight())-settings.getSBombCount();
 		
 		addMouseListener(this);
@@ -40,6 +45,8 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void paintComponent(Graphics g)
 	{
+		Graphics bufferGraphics = buffer.getGraphics();
+		
 		int w = settings.getSWidth();
 		int h = settings.getSHeight();
 		int s = settings.getSScaling();
@@ -50,38 +57,40 @@ public class PlayingField extends JPanel implements MouseListener
 			{
 				if(fields[left][top].getFieldStatus() == Field.NOT_OPENED)
 				{
-					g.setColor(Color.DARK_GRAY);
-					g.fillRect(left*s, top*s, s, s);
+					bufferGraphics.setColor(Color.DARK_GRAY);
+					bufferGraphics.fillRect(left*s, top*s, s, s);
 				}
 				else if(fields[left][top].getFieldStatus() == Field.OPENED)
 				{
-					g.setColor(Color.GRAY);
-					g.fillRect(left*s, top*s, s, s);
+					bufferGraphics.setColor(Color.GRAY);
+					bufferGraphics.fillRect(left*s, top*s, s, s);
 					
-					g.setColor(Color.BLACK);
+					bufferGraphics.setColor(Color.BLACK);
 					if(fields[left][top].getBombStatus() == Field.BOMBED)
-						g.drawString("x", left*s + s/2, top*s + s/2);
+						bufferGraphics.drawString("x", left*s + s/2, top*s + s/2);
 					else if(fields[left][top].getBombStatus() > 0)
-						g.drawString(fields[left][top].getBombStatus() + "", left*s + s/2, top*s + s/2);
+						bufferGraphics.drawString(fields[left][top].getBombStatus() + "", left*s + s/2, top*s + s/2);
 				}
 				else if(fields[left][top].getFieldStatus() == Field.FLAGGED)
 				{
-					g.setColor(Color.RED);
-					g.fillRect(left*s, top*s, s, s);
+					bufferGraphics.setColor(Color.RED);
+					bufferGraphics.fillRect(left*s, top*s, s, s);
 				}
 			}
 		}
 		
-		g.setColor(Color.BLACK);
+		bufferGraphics.setColor(Color.BLACK);
 		for(int i = 0; i <= w; i++)
 		{
-			g.drawLine(i*s, 0, i*s, h*s);
+			bufferGraphics.drawLine(i*s, 0, i*s, h*s);
 		}
 		
 		for(int i = 0; i <= h; i++)
 		{
-			g.drawLine(0, i*s, w*s, i*s);
+			bufferGraphics.drawLine(0, i*s, w*s, i*s);
 		}
+		
+		g.drawImage(buffer, 0, 0, null);
 	}
 	
 	private void initFields()
