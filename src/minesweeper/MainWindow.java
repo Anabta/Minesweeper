@@ -13,12 +13,15 @@ import javax.swing.JMenuItem;
 public class MainWindow extends JFrame
 {
 	private PlayingField playingField;
-	private SettingsWindow settings;
+	private SettingsWindow settingsWindow;
+	private Settings settings;
 	
 	public MainWindow()
 	{
-		settings = new SettingsWindow(SettingsWindow.DIF_EASY, this);
-		//settings = new SettingsWindow(30,15,40,50,200,200);
+		settings = new Settings(Settings.DIF_EASY);
+//		settings = new SettingsWindow(30,15,40,50,200,200);
+		
+		settingsWindow = new SettingsWindow(this);
 		
 		playingField = null;
 		
@@ -37,9 +40,9 @@ public class MainWindow extends JFrame
 		this.setVisible(false);
 		this.playingField = null;
 		
-		this.playingField = new PlayingField(settings,this);
+		this.playingField = new PlayingField(this);
 		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +51));
-		this.setLocation(new Point(settings.getSPxLeft(),settings.getSPxTop()));
+		this.setLocation(new Point(settings.getPxLeft(),settings.getPxTop()));
 		this.setContentPane(playingField);
 		
 		this.setVisible(true);
@@ -54,10 +57,15 @@ public class MainWindow extends JFrame
 		menSettings.setText("Einstellungen");
 		menSettings.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
-			settings.setVisible(true);
+			settingsWindow.setVisible(true);
 		}});
 		men.add(menSettings);
 		menBar.add(men);
 		return menBar;
+	}
+	
+	public Settings getSettings()
+	{
+		return settings;
 	}
 }

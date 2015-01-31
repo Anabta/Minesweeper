@@ -8,7 +8,7 @@ public class Field
 	
 	public static final int BOMBED = 9;
 	
-	private SettingsWindow settings;
+	private Settings settings;
 	private PlayingField playingField;
 	
 	private int fieldStatus;
@@ -19,7 +19,7 @@ public class Field
 	public Field right = null;
 	public Field bottom = null;
 	
-	public Field(int x, int y, SettingsWindow set, PlayingField pf)
+	public Field(int x, int y, Settings set, PlayingField pf)
 	{
 		this.settings = set;
 		this.playingField = pf;
@@ -105,7 +105,7 @@ public class Field
 					if(this.getNeighbour(d).getFieldStatus() == Field.NOT_OPENED)
 						this.getNeighbour(d).openField(true);
 		
-		if(recursive == false || settings.getSAnimation() == true)
+		if(recursive == false || settings.getAnimation() == true)
 			playingField.paintComponent(playingField.getGraphics());
 	}
 }

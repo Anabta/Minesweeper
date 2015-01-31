@@ -16,10 +16,12 @@ import javax.swing.JTextField;
 public class SettingsPanel extends JPanel
 {	
 	private SettingsWindow parent;
+	private Settings settings;
 	
 	public SettingsPanel(SettingsWindow par)
 	{
 		this.parent = par;
+		this.settings = this.parent.getSettings();
 		this.setLayout(new BorderLayout());
 		
 		JPanel panSubmit = new JPanel(new GridLayout(1,2));
@@ -83,15 +85,15 @@ public class SettingsPanel extends JPanel
 		{
 			if(radBeginner.isSelected())
 			{
-				parent.setSDifficulty(SettingsWindow.DIF_EASY);
+				settings.setDifficulty(Settings.DIF_EASY);
 			}
 			else if(radIntermediate.isSelected())
 			{
-				parent.setSDifficulty(SettingsWindow.DIF_MEDIUM);
+				settings.setDifficulty(Settings.DIF_MEDIUM);
 			}
 			else if(radExpert.isSelected())
 			{
-				parent.setSDifficulty(SettingsWindow.DIF_HARD);
+				settings.setDifficulty(Settings.DIF_HARD);
 			}
 			else if(radCustom.isSelected())
 			{
@@ -111,12 +113,12 @@ public class SettingsPanel extends JPanel
 					JOptionPane.showMessageDialog(null,"Die eingegebenen Werte sind nicht gültig!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
 					return;
 				}
-				parent.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
+				settings.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
 			}
 			if(radAnimationsOn.isSelected())
-				parent.setSAnimation(true);
+				settings.setAnimation(true);
 			else if(radAnimationsOff.isSelected())
-				parent.setSAnimation(false);
+				settings.setAnimation(false);
 			
 			parent.setVisible(false);
 			parent.newGame();

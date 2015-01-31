@@ -14,29 +14,29 @@ import javax.swing.JPanel;
 public class PlayingField extends JPanel implements MouseListener
 {
 	private Field[][] fields;			//0=not opened ; 1=opened ; 2=flag
-	private SettingsWindow settings;
+	private Settings settings;
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
 	
 	private BufferedImage buffer;
 	
-	public PlayingField(SettingsWindow set, MainWindow mw)
+	public PlayingField(MainWindow mw)
 	{
-		this.settings = set;
 		this.mainWindow = mw;
+		this.settings = mainWindow.getSettings();
 		
-		int w = settings.getSWidth();
-		int h = settings.getSHeight();
+		int w = settings.getWidth();
+		int h = settings.getHeight();
 		
 		this.fields = new Field[w][h];
 		
 		this.initFields();
 		this.placeBombs();
-		this.setSize(new Dimension(w*settings.getSScaling(),h*settings.getSScaling()));
+		this.setSize(new Dimension(w*settings.getScaling(),h*settings.getScaling()));
 		
-		buffer = new BufferedImage(w*settings.getSScaling(),h*settings.getSScaling(),BufferedImage.TYPE_INT_RGB);
+		buffer = new BufferedImage(w*settings.getScaling(),h*settings.getScaling(),BufferedImage.TYPE_INT_RGB);
 		
-		this.fieldsToOpen = (settings.getSWidth()*settings.getSHeight())-settings.getSBombCount();
+		this.fieldsToOpen = (settings.getWidth()*settings.getHeight())-settings.getBombCount();
 		
 		addMouseListener(this);
 	}
@@ -47,9 +47,9 @@ public class PlayingField extends JPanel implements MouseListener
 	{
 		Graphics bufferGraphics = buffer.getGraphics();
 		
-		int w = settings.getSWidth();
-		int h = settings.getSHeight();
-		int s = settings.getSScaling();
+		int w = settings.getWidth();
+		int h = settings.getHeight();
+		int s = settings.getScaling();
 		
 		for(int top = 0; top < h; top++)
 		{
@@ -86,34 +86,35 @@ public class PlayingField extends JPanel implements MouseListener
 		for(int i = 0; i <= h; i++)
 			bufferGraphics.drawLine(0, i*s, w*s, i*s);
 		
-		g.drawImage(buffer, 0, 0, null);
+		if(g != null)
+			g.drawImage(buffer, 0, 0, null);
 	}
 	
 	private void initFields()
 	{
-		for(int y = 0; y < settings.getSHeight(); y++)
-			for(int x = 0; x < settings.getSWidth(); x++)
+		for(int y = 0; y < settings.getHeight(); y++)
+			for(int x = 0; x < settings.getWidth(); x++)
 				this.fields[x][y] = new Field(x,y,settings,this);
 		
-		for(int y = 0; y < settings.getSHeight(); y++)
+		for(int y = 0; y < settings.getHeight(); y++)
 		{
-			for(int x = 0; x < settings.getSWidth(); x++)
+			for(int x = 0; x < settings.getWidth(); x++)
 			{
 				fields[x][y].top = (y > 0) ? fields[x][y-1] : null;
 				fields[x][y].left = (x > 0) ? fields[x-1][y] : null;
-				fields[x][y].right = (x+1 < settings.getSWidth()) ? fields[x+1][y] : null;
-				fields[x][y].bottom = (y+1 < settings.getSHeight()) ? fields[x][y+1] : null;
+				fields[x][y].right = (x+1 < settings.getWidth()) ? fields[x+1][y] : null;
+				fields[x][y].bottom = (y+1 < settings.getHeight()) ? fields[x][y+1] : null;
 			}
 		}
 	}
 	
 	private void placeBombs()
 	{
-		int w = settings.getSWidth();
-		int h = settings.getSHeight();
+		int w = settings.getWidth();
+		int h = settings.getHeight();
 		
 		int x,y;
-		for(int i = 0; i < settings.getSBombCount(); i++)
+		for(int i = 0; i < settings.getBombCount(); i++)
 		{
 			x = (int) (Math.random()*w);
 			y = (int) (Math.random()*h);
@@ -129,51 +130,10 @@ public class PlayingField extends JPanel implements MouseListener
 		}
 	}
 	
-//	/**
-//	 * @deprecated
-//	 * @param f
-//	 */
-//	public void openField(Field f)
-//	{
-//		this.openField(f, false);
-//	}
-//	
-//	/**
-//	 * @deprecated
-//	 * @param f
-//	 * @param recursive
-//	 */
-//	public void openField(Field f, boolean recursive)
-//	{
-//		if(f.getBombStatus() == Field.BOMBED)
-//		{
-//			gameOver();
-//			return;
-//		}
-//		
-//		if(f.getFieldStatus() == Field.OPENED)
-//			return;
-//		
-//		f.setFieldStatus(Field.OPENED);
-//		fieldsToOpen--;
-//		
-//		if(fieldsToOpen == 0)
-//			youWin();
-//		
-//		if(f.getBombStatus() == 0)
-//			for(Direction d : Direction.values())
-//				if(f.getNeighbour(d) != null)
-//					if(f.getNeighbour(d).getFieldStatus() == Field.NOT_OPENED)
-//						openField(f.getNeighbour(d),true);
-//		
-//		if(recursive == false || settings.getSAnimation() == true)
-//			paintComponent(this.getGraphics());	
-//	}
-	
 	public void gameOver()
 	{
-		for(int top = 0; top < settings.getSHeight(); top++)
-			for(int left = 0; left < settings.getSWidth(); left++)
+		for(int top = 0; top < settings.getHeight(); top++)
+			for(int left = 0; left < settings.getWidth(); left++)
 				this.fields[left][top].setFieldStatus(Field.OPENED);
 		
 		paintComponent(this.getGraphics());
@@ -184,8 +144,8 @@ public class PlayingField extends JPanel implements MouseListener
 	
 	public void youWin()
 	{
-		for(int top = 0; top < settings.getSHeight(); top++)
-			for(int left = 0; left < settings.getSWidth(); left++)
+		for(int top = 0; top < settings.getHeight(); top++)
+			for(int left = 0; left < settings.getWidth(); left++)
 				this.fields[left][top].setFieldStatus(Field.OPENED);
 		
 		paintComponent(this.getGraphics());
@@ -209,8 +169,8 @@ public class PlayingField extends JPanel implements MouseListener
 	{
 		if(e.getClickCount() == 2)
 		{
-			int x = e.getX()/settings.getSScaling();
-			int y = e.getY()/settings.getSScaling();
+			int x = e.getX()/settings.getScaling();
+			int y = e.getY()/settings.getScaling();
 			int markedNeighbours = 0;
 			Field f = fields[x][y];
 			
@@ -255,8 +215,8 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
-		int mx = e.getX()/settings.getSScaling();
-		int my = e.getY()/settings.getSScaling();
+		int mx = e.getX()/settings.getScaling();
+		int my = e.getY()/settings.getScaling();
 		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my].getFieldStatus() != Field.FLAGGED)
 		{
 			fields[mx][my].openField();
