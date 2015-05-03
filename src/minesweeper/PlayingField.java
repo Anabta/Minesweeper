@@ -127,6 +127,10 @@ public class PlayingField extends JPanel implements MouseListener
 						if(fields[x][y].getNeighbour(d).getBombStatus() != Field.BOMBED)
 							fields[x][y].getNeighbour(d).incBombs();
 			}
+			else
+			{
+				i--;
+			}
 		}
 	}
 	
