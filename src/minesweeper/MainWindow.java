@@ -10,12 +10,18 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+/**
+ * This is the main window which coordinates all the other objects and windows.
+ */
 public class MainWindow extends JFrame
 {
 	private PlayingField playingField;
 	private SettingsWindow settingsWindow;
 	private Settings settings;
-	
+
+	/**
+	 * The constructor initiates all the needed objects with default values.
+	 */
 	public MainWindow()
 	{
 		settings = new Settings(Settings.DIF_EASY);
@@ -34,7 +40,11 @@ public class MainWindow extends JFrame
 		
 		this.setVisible(true);
 	}
-	
+
+	/**
+	 * Method to start a new game.
+	 * The window will close and create a new PlayingField object and reopen again.
+	 */
 	public void newGame()
 	{
 		this.setVisible(false);
@@ -47,7 +57,12 @@ public class MainWindow extends JFrame
 		
 		this.setVisible(true);
 	}
-	
+
+	/**
+	 * Creates a menu bar for the main window.
+	 * Will only be called once by the constructor.
+	 * @return
+	 */
 	private JMenuBar createMenuBar()
 	{
 		JMenuBar menBar = new JMenuBar();
@@ -63,7 +78,11 @@ public class MainWindow extends JFrame
 		menBar.add(men);
 		return menBar;
 	}
-	
+
+	/**
+	 * Returns the settings object of the main window.
+	 * @return
+	 */
 	public Settings getSettings()
 	{
 		return settings;

@@ -11,6 +11,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
+/**
+ * This class manages the whole playingfield with all the individual fields as well as the graphics to draw the fields.
+ */
 public class PlayingField extends JPanel implements MouseListener
 {
 	private Field[][] fields;			//0=not opened ; 1=opened ; 2=flag
@@ -19,7 +22,11 @@ public class PlayingField extends JPanel implements MouseListener
 	private int fieldsToOpen;
 	
 	private BufferedImage buffer;
-	
+
+	/**
+	 * The constructor initiates the individual parts of the playingfield with values from the settings.
+	 * @param mw the main window object
+	 */
 	public PlayingField(MainWindow mw)
 	{
 		this.mainWindow = mw;
@@ -40,8 +47,13 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		addMouseListener(this);
 	}
-	
-	
+
+	/**
+	 * This method handles all the drawing in the playingfield.
+	 * This method is usually called automatically by the Swing API.
+	 * I use passive rendering in this project because the graphics are not too fancy and it's reasonably easier.
+	 * @param g
+	 */
 	@Override
 	public void paintComponent(Graphics g)
 	{
@@ -89,7 +101,10 @@ public class PlayingField extends JPanel implements MouseListener
 		if(g != null)
 			g.drawImage(buffer, 0, 0, null);
 	}
-	
+
+	/**
+	 * This method initiates all fields with default values.
+	 */
 	private void initFields()
 	{
 		for(int y = 0; y < settings.getHeight(); y++)
@@ -107,7 +122,10 @@ public class PlayingField extends JPanel implements MouseListener
 			}
 		}
 	}
-	
+
+	/**
+	 * This method places all the bombs in the playingfield randomly.
+	 */
 	private void placeBombs()
 	{
 		int w = settings.getWidth();
@@ -133,7 +151,10 @@ public class PlayingField extends JPanel implements MouseListener
 			}
 		}
 	}
-	
+
+	/**
+	 * This method opens the whole playingfield and shows a message that the player has lost.
+	 */
 	public void gameOver()
 	{
 		for(int top = 0; top < settings.getHeight(); top++)
@@ -145,7 +166,10 @@ public class PlayingField extends JPanel implements MouseListener
 		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
-	
+
+	/**
+	 * This method opens the whole playingfield and shows a message that the player has won.
+	 */
 	public void youWin()
 	{
 		for(int top = 0; top < settings.getHeight(); top++)
@@ -157,17 +181,28 @@ public class PlayingField extends JPanel implements MouseListener
 		JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
-	
+
+	/**
+	 * Returns the number of fields to be opened.
+	 * @return fields to be opened
+	 */
 	public int getFieldsToOpen()
 	{
 		return fieldsToOpen;
 	}
-	
+
+	/**
+	 * Decreases the number of fields to be opened by one.
+	 */
 	public void decFieldsToOpen()
 	{
 		fieldsToOpen--;
 	}
 
+	/**
+	 * This method handles the event of a mouse double click.
+	 * @param e
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
@@ -216,6 +251,10 @@ public class PlayingField extends JPanel implements MouseListener
 	}
 
 
+	/**
+	 * This method handles the event of a left or right klick.
+	 * @param e
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{

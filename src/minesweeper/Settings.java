@@ -2,6 +2,9 @@ package minesweeper;
 
 import java.security.InvalidParameterException;
 
+/**
+ * This class wraps up all the  necessary settings configuration data for the whole program.
+ */
 public class Settings
 {
 	public static int DIF_EASY = 1;
@@ -18,7 +21,16 @@ public class Settings
 	private int pxLeft;
 	private int pxTop;
 	private boolean animations;
-	
+
+	/**
+	 * This constructor initiates the settings object with some values.
+	 * @param width width of the playingfield
+	 * @param height height of the playingfield
+	 * @param scaling scaling of the playingfield
+	 * @param bombCount number of bombs on the playingfield
+	 * @param left x position of the main window
+	 * @param top y position of the main window
+	 */
 	public Settings(int width, int height, int scaling, int bombCount, int left, int top)
 	{
 		this.width = width;
@@ -30,7 +42,11 @@ public class Settings
 		this.difficulty = 0;
 		this.animations = false;
 	}
-	
+
+	/**
+	 * This constructor initiates the settings object with a difficulty.
+	 * @param diff difficulty to be set
+	 */
 	public Settings(int diff)
 	{
 		if(diff > 0 && diff < 4)

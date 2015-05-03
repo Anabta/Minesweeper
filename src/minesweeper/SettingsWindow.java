@@ -6,6 +6,9 @@ import java.security.InvalidParameterException;
 
 import javax.swing.JFrame;
 
+/**
+ * This class creates a settings window to wrap the settings panel.
+ */
 public class SettingsWindow extends JFrame
 {	
 	private MainWindow mainWindow;

@@ -2,6 +2,12 @@ package minesweeper;
 
 import javax.swing.UIManager;
 
+/**
+ * This is the entry point for the Application.
+ * Here the look and feel is set and the main class is instantiated.
+ *
+ * @author Florian Lüdiger
+ */
 public class Minesweeper
 {
 

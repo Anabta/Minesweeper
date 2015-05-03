@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+/**
+ * This class offers a window panel for all the settings to be changed.
+ */
 public class SettingsPanel extends JPanel
 {	
 	private SettingsWindow parent;
