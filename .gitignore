@@ -10,6 +10,8 @@ tmp/
 local.properties
 .settings/
 .loadpath
+.idea/
+minesweeper.iml
 
 # External tool builders
 .externalToolBuilders/
