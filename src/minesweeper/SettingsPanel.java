@@ -29,15 +29,13 @@ public class SettingsPanel extends JPanel
 		
 		JPanel panSubmit = new JPanel(new GridLayout(1,2));
 		this.add(panSubmit, BorderLayout.PAGE_END);
-		JPanel panOverall = new JPanel(new GridLayout(2,2));
+		JPanel panOverall = new JPanel(new GridLayout(1,2));
 		this.add(panOverall, BorderLayout.CENTER);
-		JPanel panTopLeft = new JPanel(new GridLayout(3,1));
-		panOverall.add(panTopLeft);
-		JPanel panTopRight = new JPanel(new GridLayout(2,1));
-		panOverall.add(panTopRight);
+		JPanel panLeft = new JPanel(new GridLayout(3,1));
+		panOverall.add(panLeft);
+		JPanel panRight = new JPanel(new GridLayout(2,1));
+		panOverall.add(panRight);
 		JPanel panCustom = new JPanel(new GridLayout(3,2));
-		JPanel panBotLeft = new JPanel(new GridLayout(2,1));
-		panOverall.add(panBotLeft);
 		
 		final JRadioButton radBeginner = new JRadioButton("Beginner");
 		final JRadioButton radIntermediate = new JRadioButton("Intermediate");
@@ -50,13 +48,13 @@ public class SettingsPanel extends JPanel
 		radDifGrp.add(radExpert);
 		radDifGrp.add(radCustom);
 		
-		panTopLeft.add(radBeginner);
-		panTopLeft.add(radIntermediate);
-		panTopLeft.add(radExpert);
+		panLeft.add(radBeginner);
+		panLeft.add(radIntermediate);
+		panLeft.add(radExpert);
 		
-		panTopRight.add(radCustom);
+		panRight.add(radCustom);
 		
-		panTopRight.add(panCustom);
+		panRight.add(panCustom);
 		
 		JLabel labWidth = new JLabel("Width:");
 		JLabel labHeight = new JLabel("Height:");
@@ -72,16 +70,6 @@ public class SettingsPanel extends JPanel
 		panCustom.add(txfHeight);
 		panCustom.add(labBombCount);
 		panCustom.add(txfBombCount);
-		
-		final JRadioButton radAnimationsOn = new JRadioButton("Animations ON");
-		final JRadioButton radAnimationsOff = new JRadioButton("Animations OFF");
-		
-		ButtonGroup radAnimGrp = new ButtonGroup();
-		radAnimGrp.add(radAnimationsOn);
-		radAnimGrp.add(radAnimationsOff);
-		
-		panBotLeft.add(radAnimationsOn);
-		panBotLeft.add(radAnimationsOff);
 		
 		JButton butOk = new JButton("OK");
 		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
@@ -118,11 +106,6 @@ public class SettingsPanel extends JPanel
 				}
 				settings.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
 			}
-			if(radAnimationsOn.isSelected())
-				settings.setAnimation(true);
-			else if(radAnimationsOff.isSelected())
-				settings.setAnimation(false);
-			
 			parent.setVisible(false);
 			parent.newGame();
 		}});

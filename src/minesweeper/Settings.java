@@ -20,7 +20,6 @@ public class Settings
 	private int difficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
 	private int pxLeft;
 	private int pxTop;
-	private boolean animations;
 
 	/**
 	 * This constructor initiates the settings object with some values.
@@ -40,7 +39,6 @@ public class Settings
 		this.pxLeft = left;
 		this.pxTop = top;
 		this.difficulty = 0;
-		this.animations = false;
 	}
 
 	/**
@@ -53,8 +51,6 @@ public class Settings
 			this.setDifficulty(diff);
 		else
 			throw new InvalidParameterException();
-		
-		this.animations = false;
 	}
 	
 	public int getWidth()
@@ -167,16 +163,6 @@ public class Settings
 	{
 		this.pxLeft = pxLeft;
 		this.pxTop = pxTop;
-	}
-	
-	public void setAnimation(boolean a)
-	{
-		this.animations = a;
-	}
-	
-	public boolean getAnimation()
-	{
-		return this.animations;
 	}
 	
 }
