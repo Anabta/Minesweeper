@@ -17,16 +17,12 @@ public class MainWindow extends JFrame
 {
 	private PlayingField playingField;
 	private SettingsWindow settingsWindow;
-	private Settings settings;
 
 	/**
 	 * The constructor initiates all the needed objects with default values.
 	 */
 	public MainWindow()
 	{
-		settings = new Settings(Settings.DIF_EASY);
-//		settings = new SettingsWindow(30,15,40,50,200,200);
-		
 		settingsWindow = new SettingsWindow(this);
 		
 		playingField = null;
@@ -77,14 +73,5 @@ public class MainWindow extends JFrame
 		men.add(menSettings);
 		menBar.add(men);
 		return menBar;
-	}
-
-	/**
-	 * Returns the settings object of the main window.
-	 * @return
-	 */
-	public Settings getSettings()
-	{
-		return settings;
 	}
 }

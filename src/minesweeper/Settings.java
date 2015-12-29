@@ -1,12 +1,17 @@
 package minesweeper;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+
 import java.security.InvalidParameterException;
 
 /**
  * This class wraps up all the  necessary settings configuration data for the whole program.
+ * This is a singleton class. You can get the instance by calling Settings.getInstance().
  */
 public class Settings
 {
+	private static Settings instance;
+
 	public static int DIF_EASY = 1;
 	public static int DIF_MEDIUM = 2;
 	public static int DIF_HARD = 3;
@@ -16,39 +21,23 @@ public class Settings
 	public static int maxScreenHeight = 720;
 	
 	
-	private int width;
-	private int height;
-	private int scaling;
-	private int bombCount;
+	private int width;			// width of the playingfield
+	private int height;			// height of the playingfield
+	private int scaling;		// size of one individual field
+	private int bombCount;		// nnumber of bombs on the playingfield
 	private int difficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
 
 	/**
-	 * This constructor initiates the settings object with some values.
-	 * @param width width of the playingfield
-	 * @param height height of the playingfield
-	 * @param bombCount number of bombs on the playingfield
-	 * @param left x position of the main window
-	 * @param top y position of the main window
+	 * This private constructor prevents constructing an object from other places.
 	 */
-	public Settings(int width, int height, int bombCount, int left, int top)
-	{
-		this.width = width;
-		this.height = height;
-		this.scaling = calculateScaling(width,height);
-		this.bombCount = bombCount;
-		this.difficulty = 0;
-	}
+	private Settings () {}
 
-	/**
-	 * This constructor initiates the settings object with a difficulty.
-	 * @param diff difficulty to be set
-	 */
-	public Settings(int diff)
-	{
-		if(diff > 0 && diff < 4)
-			this.setDifficulty(diff);
-		else
-			throw new InvalidParameterException();
+	public static Settings getInstance() {
+		if (Settings.instance == null) {
+			Settings.instance = new Settings();
+			Settings.instance.setDifficulty(DIF_EASY);
+		}
+		return Settings.instance;
 	}
 	
 	public int getWidth()

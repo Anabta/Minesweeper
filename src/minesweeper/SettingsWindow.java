@@ -37,9 +37,4 @@ public class SettingsWindow extends JFrame
 	{
 		mainWindow.newGame();
 	}
-	
-	public Settings getSettings()
-	{
-		return mainWindow.getSettings();
-	}
 }

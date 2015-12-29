@@ -19,12 +19,10 @@ import javax.swing.JTextField;
 public class SettingsPanel extends JPanel
 {	
 	private SettingsWindow parent;
-	private Settings settings;
 	
 	public SettingsPanel(SettingsWindow par)
 	{
 		this.parent = par;
-		this.settings = this.parent.getSettings();
 		this.setLayout(new BorderLayout());
 		
 		JPanel panSubmit = new JPanel(new GridLayout(1,2));
@@ -70,7 +68,9 @@ public class SettingsPanel extends JPanel
 		panCustom.add(txfHeight);
 		panCustom.add(labBombCount);
 		panCustom.add(txfBombCount);
-		
+
+		Settings settings = Settings.getInstance();
+
 		JButton butOk = new JButton("OK");
 		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
