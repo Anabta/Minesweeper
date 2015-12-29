@@ -1,6 +1,0 @@
-Bugs:
-when a new game starts because of losing / winning you get an exception
-
-ToDos:
-put automatic opening of fields into another thread
-double clicking should open all fields nearby
