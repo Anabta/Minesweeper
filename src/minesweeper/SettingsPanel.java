@@ -19,30 +19,26 @@ import javax.swing.JTextField;
 public class SettingsPanel extends JPanel
 {	
 	private SettingsWindow parent;
-	private Settings settings;
 	
 	public SettingsPanel(SettingsWindow par)
 	{
 		this.parent = par;
-		this.settings = this.parent.getSettings();
 		this.setLayout(new BorderLayout());
 		
 		JPanel panSubmit = new JPanel(new GridLayout(1,2));
 		this.add(panSubmit, BorderLayout.PAGE_END);
-		JPanel panOverall = new JPanel(new GridLayout(2,2));
+		JPanel panOverall = new JPanel(new GridLayout(1,2));
 		this.add(panOverall, BorderLayout.CENTER);
-		JPanel panTopLeft = new JPanel(new GridLayout(3,1));
-		panOverall.add(panTopLeft);
-		JPanel panTopRight = new JPanel(new GridLayout(2,1));
-		panOverall.add(panTopRight);
+		JPanel panLeft = new JPanel(new GridLayout(3,1));
+		panOverall.add(panLeft);
+		JPanel panRight = new JPanel(new GridLayout(2,1));
+		panOverall.add(panRight);
 		JPanel panCustom = new JPanel(new GridLayout(3,2));
-		JPanel panBotLeft = new JPanel(new GridLayout(2,1));
-		panOverall.add(panBotLeft);
 		
-		final JRadioButton radBeginner = new JRadioButton("Anfänger");
-		final JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
-		final JRadioButton radExpert = new JRadioButton("Experte");
-		final JRadioButton radCustom = new JRadioButton("Benutzerdefiniert");
+		final JRadioButton radBeginner = new JRadioButton("Beginner");
+		final JRadioButton radIntermediate = new JRadioButton("Intermediate");
+		final JRadioButton radExpert = new JRadioButton("Expert");
+		final JRadioButton radCustom = new JRadioButton("Custom");
 		
 		ButtonGroup radDifGrp = new ButtonGroup();
 		radDifGrp.add(radBeginner);
@@ -50,17 +46,17 @@ public class SettingsPanel extends JPanel
 		radDifGrp.add(radExpert);
 		radDifGrp.add(radCustom);
 		
-		panTopLeft.add(radBeginner);
-		panTopLeft.add(radIntermediate);
-		panTopLeft.add(radExpert);
+		panLeft.add(radBeginner);
+		panLeft.add(radIntermediate);
+		panLeft.add(radExpert);
 		
-		panTopRight.add(radCustom);
+		panRight.add(radCustom);
 		
-		panTopRight.add(panCustom);
+		panRight.add(panCustom);
 		
-		JLabel labWidth = new JLabel("Breite:");
-		JLabel labHeight = new JLabel("Höhe:");
-		JLabel labBombCount = new JLabel("Bombenzahl:");
+		JLabel labWidth = new JLabel("Width:");
+		JLabel labHeight = new JLabel("Height:");
+		JLabel labBombCount = new JLabel("Number of Bombs:");
 		
 		final JTextField txfWidth = new JTextField();
 		final JTextField txfHeight = new JTextField();
@@ -72,17 +68,9 @@ public class SettingsPanel extends JPanel
 		panCustom.add(txfHeight);
 		panCustom.add(labBombCount);
 		panCustom.add(txfBombCount);
-		
-		final JRadioButton radAnimationsOn = new JRadioButton("Animationen AN");
-		final JRadioButton radAnimationsOff = new JRadioButton("Animationen AUS");
-		
-		ButtonGroup radAnimGrp = new ButtonGroup();
-		radAnimGrp.add(radAnimationsOn);
-		radAnimGrp.add(radAnimationsOff);
-		
-		panBotLeft.add(radAnimationsOn);
-		panBotLeft.add(radAnimationsOff);
-		
+
+		Settings settings = Settings.getInstance();
+
 		JButton butOk = new JButton("OK");
 		butOk.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
@@ -102,7 +90,7 @@ public class SettingsPanel extends JPanel
 			{
 				if(txfWidth.getText().equals("") || txfHeight.getText().equals("") || txfBombCount.getText().equals(""))
 				{
-					JOptionPane.showMessageDialog(null, "Die eingegebenen Werte sind nicht gültig!","Fehler",JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane.showMessageDialog(null, "The entered values are invalid!","Fehler",JOptionPane.OK_CANCEL_OPTION);
 					return;
 				}
 				int enteredWidth = Integer.parseInt(txfWidth.getText());
@@ -113,20 +101,15 @@ public class SettingsPanel extends JPanel
 						enteredHeight < 1 || enteredHeight > 100 ||
 						enteredBombCount < 1 || enteredBombCount > (enteredWidth * enteredHeight))
 				{
-					JOptionPane.showMessageDialog(null,"Die eingegebenen Werte sind nicht gültig!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane.showMessageDialog(null,"The entered values are invalid!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
 					return;
 				}
 				settings.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
 			}
-			if(radAnimationsOn.isSelected())
-				settings.setAnimation(true);
-			else if(radAnimationsOff.isSelected())
-				settings.setAnimation(false);
-			
 			parent.setVisible(false);
 			parent.newGame();
 		}});
-		JButton butCancel = new JButton("Abbrechen");
+		JButton butCancel = new JButton("Cancel");
 		butCancel.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
 			parent.setVisible(false);	

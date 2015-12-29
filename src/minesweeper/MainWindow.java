@@ -17,16 +17,12 @@ public class MainWindow extends JFrame
 {
 	private PlayingField playingField;
 	private SettingsWindow settingsWindow;
-	private Settings settings;
 
 	/**
 	 * The constructor initiates all the needed objects with default values.
 	 */
 	public MainWindow()
 	{
-		settings = new Settings(Settings.DIF_EASY);
-//		settings = new SettingsWindow(30,15,40,50,200,200);
-		
 		settingsWindow = new SettingsWindow(this);
 		
 		playingField = null;
@@ -52,7 +48,7 @@ public class MainWindow extends JFrame
 		
 		this.playingField = new PlayingField(this);
 		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +51));
-		this.setLocation(new Point(settings.getPxLeft(),settings.getPxTop()));
+		this.setLocation(new Point(200,20));
 		this.setContentPane(playingField);
 		
 		this.setVisible(true);
@@ -67,9 +63,9 @@ public class MainWindow extends JFrame
 	{
 		JMenuBar menBar = new JMenuBar();
 		JMenu men = new JMenu();
-		men.setText("Menü");
+		men.setText("Menu");
 		JMenuItem menSettings = new JMenuItem();
-		menSettings.setText("Einstellungen");
+		menSettings.setText("Settings");
 		menSettings.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
 			settingsWindow.setVisible(true);
@@ -77,14 +73,5 @@ public class MainWindow extends JFrame
 		men.add(menSettings);
 		menBar.add(men);
 		return menBar;
-	}
-
-	/**
-	 * Returns the settings object of the main window.
-	 * @return
-	 */
-	public Settings getSettings()
-	{
-		return settings;
 	}
 }

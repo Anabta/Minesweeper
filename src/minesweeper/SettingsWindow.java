@@ -27,7 +27,7 @@ public class SettingsWindow extends JFrame
 		this.setLocation(new Point(100,100));
 		this.setResizable(false);
 		sp = new SettingsPanel(this);
-		sp.setSize(new Dimension(400,300));
+		sp.setSize(new Dimension(400,200));
 		this.setSize(sp.getSize());
 		this.setContentPane(sp);
 		this.setVisible(false);
@@ -36,10 +36,5 @@ public class SettingsWindow extends JFrame
 	public void newGame()
 	{
 		mainWindow.newGame();
-	}
-	
-	public Settings getSettings()
-	{
-		return mainWindow.getSettings();
 	}
 }

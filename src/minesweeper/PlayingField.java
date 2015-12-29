@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,7 +18,6 @@ import javax.swing.JPanel;
 public class PlayingField extends JPanel implements MouseListener
 {
 	private Field[][] fields;			//0=not opened ; 1=opened ; 2=flag
-	private Settings settings;
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
 	
@@ -30,8 +30,8 @@ public class PlayingField extends JPanel implements MouseListener
 	public PlayingField(MainWindow mw)
 	{
 		this.mainWindow = mw;
-		this.settings = mainWindow.getSettings();
-		
+		Settings settings = Settings.getInstance();
+
 		int w = settings.getWidth();
 		int h = settings.getHeight();
 		
@@ -58,7 +58,9 @@ public class PlayingField extends JPanel implements MouseListener
 	public void paintComponent(Graphics g)
 	{
 		Graphics bufferGraphics = buffer.getGraphics();
-		
+
+		Settings settings = Settings.getInstance();
+
 		int w = settings.getWidth();
 		int h = settings.getHeight();
 		int s = settings.getScaling();
@@ -107,6 +109,7 @@ public class PlayingField extends JPanel implements MouseListener
 	 */
 	private void initFields()
 	{
+		Settings settings = Settings.getInstance();
 		for(int y = 0; y < settings.getHeight(); y++)
 			for(int x = 0; x < settings.getWidth(); x++)
 				this.fields[x][y] = new Field(x,y,settings,this);
@@ -128,6 +131,7 @@ public class PlayingField extends JPanel implements MouseListener
 	 */
 	private void placeBombs()
 	{
+		Settings settings = Settings.getInstance();
 		int w = settings.getWidth();
 		int h = settings.getHeight();
 		
@@ -157,13 +161,14 @@ public class PlayingField extends JPanel implements MouseListener
 	 */
 	public void gameOver()
 	{
+		Settings settings = Settings.getInstance();
 		for(int top = 0; top < settings.getHeight(); top++)
 			for(int left = 0; left < settings.getWidth(); left++)
 				this.fields[left][top].setFieldStatus(Field.OPENED);
 		
 		paintComponent(this.getGraphics());
 		
-		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
+		JOptionPane.showMessageDialog(null, "You lost!", "Sorry", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 
@@ -172,13 +177,14 @@ public class PlayingField extends JPanel implements MouseListener
 	 */
 	public void youWin()
 	{
+		Settings settings = Settings.getInstance();
 		for(int top = 0; top < settings.getHeight(); top++)
 			for(int left = 0; left < settings.getWidth(); left++)
 				this.fields[left][top].setFieldStatus(Field.OPENED);
 		
 		paintComponent(this.getGraphics());
 		
-		JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
+		JOptionPane.showMessageDialog(null, "You Won!", "Congratulations", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 
@@ -206,6 +212,7 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
+		Settings settings = Settings.getInstance();
 		if(e.getClickCount() == 2)
 		{
 			int x = e.getX()/settings.getScaling();
@@ -258,6 +265,7 @@ public class PlayingField extends JPanel implements MouseListener
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
+		Settings settings = Settings.getInstance();
 		int mx = e.getX()/settings.getScaling();
 		int my = e.getY()/settings.getScaling();
 		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my].getFieldStatus() != Field.FLAGGED)

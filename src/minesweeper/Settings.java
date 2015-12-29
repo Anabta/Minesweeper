@@ -1,60 +1,43 @@
 package minesweeper;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+
 import java.security.InvalidParameterException;
 
 /**
  * This class wraps up all the  necessary settings configuration data for the whole program.
+ * This is a singleton class. You can get the instance by calling Settings.getInstance().
  */
 public class Settings
 {
+	private static Settings instance;
+
 	public static int DIF_EASY = 1;
 	public static int DIF_MEDIUM = 2;
 	public static int DIF_HARD = 3;
 	public static int DIF_CUSTOM = 4;
+
+	public static int maxScreenWidth = 1280;
+	public static int maxScreenHeight = 720;
 	
 	
-	private int width;
-	private int height;
-	private int scaling;
-	private int bombCount;
+	private int width;			// width of the playingfield
+	private int height;			// height of the playingfield
+	private int scaling;		// size of one individual field
+	private int bombCount;		// nnumber of bombs on the playingfield
 	private int difficulty;		//0 = custom, 1=easy, 2=medium, 3=hard
-	private int pxLeft;
-	private int pxTop;
-	private boolean animations;
 
 	/**
-	 * This constructor initiates the settings object with some values.
-	 * @param width width of the playingfield
-	 * @param height height of the playingfield
-	 * @param scaling scaling of the playingfield
-	 * @param bombCount number of bombs on the playingfield
-	 * @param left x position of the main window
-	 * @param top y position of the main window
+	 * This private constructor prevents constructing an object from other places.
 	 */
-	public Settings(int width, int height, int scaling, int bombCount, int left, int top)
-	{
-		this.width = width;
-		this.height = height;
-		this.scaling = scaling;
-		this.bombCount = bombCount;
-		this.pxLeft = left;
-		this.pxTop = top;
-		this.difficulty = 0;
-		this.animations = false;
-	}
+	private Settings () {}
 
-	/**
-	 * This constructor initiates the settings object with a difficulty.
-	 * @param diff difficulty to be set
-	 */
-	public Settings(int diff)
-	{
-		if(diff > 0 && diff < 4)
-			this.setDifficulty(diff);
-		else
-			throw new InvalidParameterException();
-		
-		this.animations = false;
+	public static Settings getInstance() {
+		if (Settings.instance == null) {
+			Settings.instance = new Settings();
+			Settings.instance.setDifficulty(DIF_EASY);
+		}
+		return Settings.instance;
 	}
 	
 	public int getWidth()
@@ -76,11 +59,6 @@ public class Settings
 	public int getScaling()
 	{
 		return scaling;
-	}
-
-	public void setScaling(int scaling)
-	{
-		this.scaling = scaling;
 	}
 
 	public int getBombCount()
@@ -109,28 +87,23 @@ public class Settings
 		{
 			this.width = 9;
 			this.height = 9;
-			this.scaling = 60;
+			//this.scaling = 60;
+			this.scaling = calculateScaling(this.width, this.height);
 			this.bombCount = 10;
-			this.pxLeft = 300;
-			this.pxTop = 100;
 		}
 		else if(difficulty == DIF_MEDIUM)		//medium
 		{
 			this.width = 16;
 			this.height = 16;
-			this.scaling = 50;
+			this.scaling = calculateScaling(this.width, this.height);
 			this.bombCount = 40;
-			this.pxLeft = 300;
-			this.pxTop = 20;
 		}
 		else if(difficulty == DIF_HARD)		//hard
 		{
 			this.width = 30;
 			this.height = 16;
-			this.scaling = 40;
+			this.scaling = calculateScaling(this.width, this.height);
 			this.bombCount = 99;
-			this.pxLeft = 200;
-			this.pxTop = 20;
 		}
 		else if(difficulty == DIF_CUSTOM)
 		{
@@ -150,33 +123,15 @@ public class Settings
 		this.difficulty = DIF_CUSTOM;
 		this.width = width;
 		this.height = height;
+		this.scaling = calculateScaling(width, height);
 		this.bombCount = bombCount;
 	}
 
-	public int getPxLeft()
-	{
-		return pxLeft;
-	}
-
-	public int getPxTop()
-	{
-		return pxTop;
-	}
-	
-	public void setPxPos(int pxLeft, int pxTop)
-	{
-		this.pxLeft = pxLeft;
-		this.pxTop = pxTop;
-	}
-	
-	public void setAnimation(boolean a)
-	{
-		this.animations = a;
-	}
-	
-	public boolean getAnimation()
-	{
-		return this.animations;
+	private static int calculateScaling(int width, int height) {
+		if (maxScreenWidth / width > maxScreenHeight / height)
+			return (int) Math.floor(maxScreenHeight / height);
+		else
+			return (int) Math.floor(maxScreenWidth / width);
 	}
 	
 }
