@@ -67,9 +67,9 @@ public class MainWindow extends JFrame
 	{
 		JMenuBar menBar = new JMenuBar();
 		JMenu men = new JMenu();
-		men.setText("Menü");
+		men.setText("Menu");
 		JMenuItem menSettings = new JMenuItem();
-		menSettings.setText("Einstellungen");
+		menSettings.setText("Settings");
 		menSettings.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
 			settingsWindow.setVisible(true);

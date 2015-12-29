@@ -163,7 +163,7 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		paintComponent(this.getGraphics());
 		
-		JOptionPane.showMessageDialog(null, "Sie haben verloren!", "Schade", JOptionPane.OK_CANCEL_OPTION);
+		JOptionPane.showMessageDialog(null, "You lost!", "Sorry", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 
@@ -178,7 +178,7 @@ public class PlayingField extends JPanel implements MouseListener
 		
 		paintComponent(this.getGraphics());
 		
-		JOptionPane.showMessageDialog(null, "Sie haben gewonnen!", "Glückwunsch", JOptionPane.OK_CANCEL_OPTION);
+		JOptionPane.showMessageDialog(null, "You Won!", "Congratulations", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 

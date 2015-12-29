@@ -39,10 +39,10 @@ public class SettingsPanel extends JPanel
 		JPanel panBotLeft = new JPanel(new GridLayout(2,1));
 		panOverall.add(panBotLeft);
 		
-		final JRadioButton radBeginner = new JRadioButton("Anfänger");
-		final JRadioButton radIntermediate = new JRadioButton("Fortgeschrittener");
-		final JRadioButton radExpert = new JRadioButton("Experte");
-		final JRadioButton radCustom = new JRadioButton("Benutzerdefiniert");
+		final JRadioButton radBeginner = new JRadioButton("Beginner");
+		final JRadioButton radIntermediate = new JRadioButton("Intermediate");
+		final JRadioButton radExpert = new JRadioButton("Expert");
+		final JRadioButton radCustom = new JRadioButton("Custom");
 		
 		ButtonGroup radDifGrp = new ButtonGroup();
 		radDifGrp.add(radBeginner);
@@ -58,9 +58,9 @@ public class SettingsPanel extends JPanel
 		
 		panTopRight.add(panCustom);
 		
-		JLabel labWidth = new JLabel("Breite:");
-		JLabel labHeight = new JLabel("Höhe:");
-		JLabel labBombCount = new JLabel("Bombenzahl:");
+		JLabel labWidth = new JLabel("Width:");
+		JLabel labHeight = new JLabel("Height:");
+		JLabel labBombCount = new JLabel("Number of Bombs:");
 		
 		final JTextField txfWidth = new JTextField();
 		final JTextField txfHeight = new JTextField();
@@ -73,8 +73,8 @@ public class SettingsPanel extends JPanel
 		panCustom.add(labBombCount);
 		panCustom.add(txfBombCount);
 		
-		final JRadioButton radAnimationsOn = new JRadioButton("Animationen AN");
-		final JRadioButton radAnimationsOff = new JRadioButton("Animationen AUS");
+		final JRadioButton radAnimationsOn = new JRadioButton("Animations ON");
+		final JRadioButton radAnimationsOff = new JRadioButton("Animations OFF");
 		
 		ButtonGroup radAnimGrp = new ButtonGroup();
 		radAnimGrp.add(radAnimationsOn);
@@ -102,7 +102,7 @@ public class SettingsPanel extends JPanel
 			{
 				if(txfWidth.getText().equals("") || txfHeight.getText().equals("") || txfBombCount.getText().equals(""))
 				{
-					JOptionPane.showMessageDialog(null, "Die eingegebenen Werte sind nicht gültig!","Fehler",JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane.showMessageDialog(null, "The entered values are invalid!","Fehler",JOptionPane.OK_CANCEL_OPTION);
 					return;
 				}
 				int enteredWidth = Integer.parseInt(txfWidth.getText());
@@ -113,7 +113,7 @@ public class SettingsPanel extends JPanel
 						enteredHeight < 1 || enteredHeight > 100 ||
 						enteredBombCount < 1 || enteredBombCount > (enteredWidth * enteredHeight))
 				{
-					JOptionPane.showMessageDialog(null,"Die eingegebenen Werte sind nicht gültig!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
+					JOptionPane.showMessageDialog(null,"The entered values are invalid!", "Fehler",JOptionPane.OK_CANCEL_OPTION);
 					return;
 				}
 				settings.setCustomParameters(enteredWidth,enteredHeight,enteredBombCount);
@@ -126,7 +126,7 @@ public class SettingsPanel extends JPanel
 			parent.setVisible(false);
 			parent.newGame();
 		}});
-		JButton butCancel = new JButton("Abbrechen");
+		JButton butCancel = new JButton("Cancel");
 		butCancel.addActionListener(new ActionListener() { public void actionPerformed(ActionEvent e)
 		{
 			parent.setVisible(false);	
