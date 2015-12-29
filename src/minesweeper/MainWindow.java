@@ -52,7 +52,7 @@ public class MainWindow extends JFrame
 		
 		this.playingField = new PlayingField(this);
 		this.setSize(new Dimension((int)playingField.getSize().getWidth()+7, (int)playingField.getSize().getHeight() +51));
-		this.setLocation(new Point(settings.getPxLeft(),settings.getPxTop()));
+		this.setLocation(new Point(200,20));
 		this.setContentPane(playingField);
 		
 		this.setVisible(true);
