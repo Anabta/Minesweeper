@@ -220,7 +220,7 @@ public class PlayingField extends JPanel implements MouseListener
 			int markedNeighbours = 0;
 			Field f = fields[x][y];
 			
-			if(f.getBombStatus() > 0 && f.getBombStatus() < Field.BOMBED)
+			if(f.getBombStatus() > 0 && f.getFieldStatus() == Field.OPENED)
 			{
 				for(Direction d : Direction.values())
 					if(f.getNeighbour(d) != null)
