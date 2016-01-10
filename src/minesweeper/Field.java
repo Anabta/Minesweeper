@@ -153,12 +153,13 @@ public class Field
 
 		//The playingfield should be updated only when the recursion is finished.
 		//This is important because otherwise the graphics get updated redundantly after every single field opening.
-		if(recursive == false)
+		if(recursive == false) {
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		playingField.paintComponent(playingField.getGraphics());
+			playingField.paintComponent(playingField.getGraphics());
+		}
 	}
 }
