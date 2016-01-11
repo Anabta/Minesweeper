@@ -20,7 +20,9 @@ public class PlayingField extends JPanel implements MouseListener
 	private Field[][] fields;			//0=not opened ; 1=opened ; 2=flag
 	private MainWindow mainWindow;
 	private int fieldsToOpen;
-	
+	private long startTime;
+	private float endTime;
+
 	private BufferedImage buffer;
 
 	/**
@@ -44,6 +46,8 @@ public class PlayingField extends JPanel implements MouseListener
 		buffer = new BufferedImage(w*settings.getScaling(),h*settings.getScaling(),BufferedImage.TYPE_INT_RGB);
 		
 		this.fieldsToOpen = (settings.getWidth()*settings.getHeight())-settings.getBombCount();
+
+		this.endTime = 0;
 		
 		addMouseListener(this);
 	}
@@ -183,8 +187,10 @@ public class PlayingField extends JPanel implements MouseListener
 				this.fields[left][top].setFieldStatus(Field.OPENED);
 		
 		paintComponent(this.getGraphics());
-		
-		JOptionPane.showMessageDialog(null, "You Won!", "Congratulations", JOptionPane.OK_CANCEL_OPTION);
+
+		this.endTime = this.getCurrentTime();
+
+		JOptionPane.showMessageDialog(null, "Congratulations, you won with a time of " + this.endTime + "s", "You Won!", JOptionPane.OK_CANCEL_OPTION);
 		mainWindow.newGame();
 	}
 
@@ -266,19 +272,29 @@ public class PlayingField extends JPanel implements MouseListener
 	public void mouseReleased(MouseEvent e)
 	{
 		Settings settings = Settings.getInstance();
+		if (this.fieldsToOpen == (settings.getWidth()*settings.getHeight())-settings.getBombCount()) {
+			startTime = System.nanoTime();
+		}
 		int mx = e.getX()/settings.getScaling();
 		int my = e.getY()/settings.getScaling();
 		if(e.getButton() == MouseEvent.BUTTON1 && fields[mx][my].getFieldStatus() != Field.FLAGGED)
 		{
 			fields[mx][my].openField();
 		}
-		else if(e.getButton() == MouseEvent.BUTTON3)
-		{
-			if(fields[mx][my].getFieldStatus() == Field.NOT_OPENED)
+		else if(e.getButton() == MouseEvent.BUTTON3) {
+			if (fields[mx][my].getFieldStatus() == Field.NOT_OPENED)
 				fields[mx][my].setFieldStatus(Field.FLAGGED);
-			else if(fields[mx][my].getFieldStatus() == Field.FLAGGED)
+			else if (fields[mx][my].getFieldStatus() == Field.FLAGGED)
 				fields[mx][my].setFieldStatus(Field.NOT_OPENED);
 			paintComponent(this.getGraphics());
 		}
+	}
+
+	public float getCurrentTime() {
+		if (startTime == 0 || this.endTime != 0)
+			return 0.0f;
+		long estimatedTime = System.nanoTime() - startTime;
+		estimatedTime /= 1000000;
+		return new Float(estimatedTime)/1000.0f;
 	}
 }
